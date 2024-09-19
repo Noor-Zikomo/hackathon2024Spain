@@ -1,5 +1,5 @@
 import { Boot } from "./scenes/Boot";
-import { Game as MainGame } from "./scenes/Game";
+import { GameTest as MainGame } from "./scenes/GameTest";
 import { GameOver } from "./scenes/GameOver";
 import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/Preloader";
@@ -19,6 +19,12 @@ const config: Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
+  physics: {
+    default: "arcade",
+    arcade: {
+      debug: false,
+    },
+  },
 };
 
 export default new Game(config);
