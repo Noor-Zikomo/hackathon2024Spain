@@ -1,33 +1,38 @@
-import { Scene } from 'phaser';
+import { Scene } from "phaser";
+import { GameConfig, MapConfig, PlatformConfig } from "../types.ts";
 
-export class Game extends Scene
-{
-    camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
-    msg_text : Phaser.GameObjects.Text;
-    platforms: Phaser.Physics.Arcade.StaticGroup;
+export class Game extends Scene {
+  camera: Phaser.Cameras.Scene2D.Camera;
+  background: Phaser.GameObjects.Image;
+  platforms: Phaser.Physics.Arcade.StaticGroup;
+  mapData: MapConfig;
 
-    constructor ()
-    {
-        super('Game');
-    }
+  constructor() {
+    super("Game");
+  }
 
-    handleMap ()
-    {
-        // Create platforms
-        this.platforms = this.physics.add.staticGroup();
-        this.platforms.create(100, 800, 'ground').setScale(1).refreshBody();
-        this.platforms.create(300, 800, 'ground').setScale(1).refreshBody(); // ground
-        this.platforms.create(500, 800, 'ground').setScale(1).refreshBody(); // ground
-        this.platforms.create(700, 800, 'ground').setScale(1).refreshBody(); // ground
-        this.platforms.create(900, 800, 'ground').setScale(1).refreshBody(); // ground
-    }
+  handleMap() {
+    // Create platforms
+    this.platforms = this.physics.add.staticGroup();
+    const data: MapConfig = this.mapData;
+    this.load.image(data.id, "assets/backgrounds/" + data.id + ".jpg");
+    this.background = this.add.image(512, 382, data.id);
+    this.platformsGenerate(data.config);
+  }
 
-    create ()
-    {
-        this.camera = this.cameras.main;
+  platformsGenerate(platformConfig: PlatformConfig[]) {
+    this.platforms = this.physics.add.staticGroup();
+    platformConfig.forEach((platformConfig: PlatformConfig) => {
+      this.platforms
+        .create(platformConfig.x, platformConfig.y, platformConfig.key)
+        .setScale(platformConfig.scale);
+    });
+  }
 
-        this.background = this.add.image(512, 384, 'kpsBackground');
-        this.handleMap();
-    }
+  create(data: GameConfig) {
+    this.mapData = data["mapData"];
+    this.handleMap();
+
+    this.camera = this.cameras.main;
+  }
 }
