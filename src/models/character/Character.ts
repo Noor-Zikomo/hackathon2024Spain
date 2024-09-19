@@ -1,5 +1,5 @@
 import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
-import {CursorOverrides} from "./Player.ts";
+import { CursorOverrides } from "./Player.ts";
 import KeyboardPlugin = Phaser.Input.Keyboard.KeyboardPlugin;
 
 export enum PlayerID {
@@ -52,7 +52,7 @@ export default class Character {
   public healthBar: Phaser.GameObjects.Graphics;
   public stats: CharacterStats;
   public playerSprite: Phaser.Physics.Arcade.Sprite;
-  private scene: Phaser.Scene
+  private scene: Phaser.Scene;
 
   constructor(
     id: number,
@@ -73,22 +73,21 @@ export default class Character {
   }
 
   public update(): void {
-      if (this.cursors?.left?.isDown) {
-        this.moveLeft();
-        this.playerSprite.anims.play("left", true);
-      } else if (this.cursors?.right?.isDown) {
-        this.moveRight();
-        this.playerSprite.anims.play("right", true);
-      } else {
-        this.playerSprite.setVelocityX(0);
-        this.playerSprite.anims.play("turn");
-      }
-
-      if (this.cursors.up?.isDown) {
-        this.jump();
-      }
+    if (this.cursors?.left?.isDown) {
+      this.moveLeft();
+      this.playerSprite.anims.play("left", true);
+    } else if (this.cursors?.right?.isDown) {
+      this.moveRight();
+      this.playerSprite.anims.play("right", true);
+    } else {
+      this.playerSprite.setVelocityX(0);
+      this.playerSprite.anims.play("turn");
     }
 
+    if (this.cursors.up?.isDown) {
+      this.jump();
+    }
+  }
 
   private generateHealthBar(id: number, name: string): void {
     const coordinates: Coordinates | undefined = playerNameCoordinates.get(id);
@@ -113,7 +112,7 @@ export default class Character {
   }
 
   private generateCursorKeys(
-      keysOverride?: CursorOverrides,
+    keysOverride?: CursorOverrides,
   ): Phaser.Types.Input.Keyboard.CursorKeys {
     let inputKeyword: KeyboardPlugin | null = this.scene.input.keyboard;
 
