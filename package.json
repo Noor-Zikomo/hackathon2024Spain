@@ -20,7 +20,9 @@
     "homepage": "https://github.com/phaserjs/template-esbuild-ts#readme",
     "license": "MIT",
     "dependencies": {
-        "phaser": "^3.85.2"
+        "eslint-config-prettier": "^9.1.0",
+        "phaser": "^3.85.2",
+        "prettier": "^3.3.3"
     },
     "devDependencies": {
         "@jgoz/esbuild-plugin-livereload": "^2.0.5",
@@ -29,6 +31,9 @@
         "esbuild-plugin-copy": "^2.1.1",
         "esbuild-plugin-inline-image": "^0.0.9",
         "esbuild-serve": "^1.0.1",
-        "typescript": "^5.4.5"
+        "eslint": "^9.10.0",
+        "globals": "^15.9.0",
+        "typescript": "^5.4.5",
+        "typescript-eslint": "^8.6.0"
     }
 }
