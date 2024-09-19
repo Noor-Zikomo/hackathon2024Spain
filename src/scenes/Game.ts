@@ -6,6 +6,15 @@ import { Snack } from "../items/Snack.ts";
 import { KpsToken } from "../items/Kps.ts";
 import { Item } from "../items/Item.ts";
 import Character, { PlayerID } from "../models/character/Character.ts";
+import CharacterMetrics from "../models/character/CharacterMetrics.ts";
+import CharacterDisplay, {
+  AttackType,
+} from "../models/character/CharacterDisplay.ts";
+
+enum PlayerSprite {
+  Player1 = "dude",
+  Player2 = "player2",
+}
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -97,11 +106,20 @@ export class Game extends Scene {
   }
 
   private createPlayers() {
-    this.player1 = new Character(
+    const characterMetrics: CharacterMetrics = new CharacterMetrics({
+      maxHealth: 100,
+      speed: 200,
+      attackDamage: 15,
+      attackType: AttackType.MELEE,
+      doubleJump: true,
+    });
+
+    const characterDisplay = new CharacterDisplay(
       PlayerID.Player1,
-      "Player 1",
-      this.physics.add.sprite(100, 450, "dude"),
-      {},
+      "Player1",
+      PlayerSprite.Player1,
+      { posX: 50, posY: 50 },
+      characterMetrics,
       this,
     );
 
