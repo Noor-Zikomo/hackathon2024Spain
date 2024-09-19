@@ -13,7 +13,7 @@ export class Item {
     const x = Phaser.Math.Between(25, 775);
     const y = 26;
     this.item = physics.add.image(x, y, this.name);
-    this.item.setDisplaySize(20, 20);
+    this.item.setDisplaySize(30, 30);
     this.item.setVelocity(0, 200);
     this.item.setInteractive();
     physics.add.collider(this.item, collider);
