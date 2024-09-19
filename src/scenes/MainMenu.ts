@@ -1,26 +1,27 @@
 import { Scene, GameObjects } from "phaser";
+import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
   logo: GameObjects.Image;
   title: GameObjects.Text;
 
-  public constructor() {
+  constructor() {
     super("MainMenu");
   }
 
-  public create() {
-    this.background = this.add.image(
-      window.innerWidth,
-      window.innerHeight,
-      "background",
-    );
+  getRandomMap(): {} {
+    const mapData: {}[] = mapDataJSON;
+    const mapNumber: number = Math.floor(Math.random() * mapData.length);
+    return mapData[mapNumber];
+  }
 
+  create() {
     this.logo = this.add.image(512, 300, "logo");
 
     this.title = this.add
-      .text(512, 460, "Mortal KPS placeholder", {
-        fontFamily: "main-font",
+      .text(512, 460, "Main Menu", {
+        fontFamily: "Arial Black",
         fontSize: 38,
         color: "#ffffff",
         stroke: "#000000",
@@ -29,14 +30,12 @@ export class MainMenu extends Scene {
       })
       .setOrigin(0.5);
 
-    const backgroundMusic = this.sound.add("backgroundMusicMenu", {
-      volume: 0.5,
-      loop: true,
-    });
-    backgroundMusic.play();
+    this.load.image("ground", "assets/tiles/platform.png");
+
+    console.log("creates", this.getRandomMap());
 
     this.input.once("pointerdown", () => {
-      this.scene.start("Game");
+      this.scene.start("Game", { mapData: this.getRandomMap() });
     });
   }
 }

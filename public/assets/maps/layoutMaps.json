@@ -1,0 +1,84 @@
+[
+  {
+    "id": "kpsBackground",
+    "config": [
+      {
+        "x": 100,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 300,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 500,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 500,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 700,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 900,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      }
+    ]
+  },
+  {
+    "id": "kpsBackground2",
+    "config": [
+      {
+        "x": 100,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 300,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 500,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 500,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 700,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      },
+      {
+        "x": 900,
+        "y": 800,
+        "scale": 1,
+        "key": "platform"
+      }
+    ]
+  }
+]
