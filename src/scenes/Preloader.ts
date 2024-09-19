@@ -29,6 +29,7 @@ export class Preloader extends Scene {
     this.load.image("logo", "logo.png");
     this.load.audio("backgroundMusicMenu", "audio/background-music-menu.mp3");
     this.load.audio("backgroundMusicFight", "audio/background-music-fight.mp3");
+    this.load.css("fontStyles", "fonts/fonts.css");
     this.load.image("star", "/items/star.png");
     this.load.image("coffee", "/items/coffee.png");
   }
