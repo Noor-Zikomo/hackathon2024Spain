@@ -1,33 +1,65 @@
-import { Scene } from 'phaser';
+import { Scene } from "phaser";
+import { Player, PlayerID } from "../items/Player.ts";
 
-export class Game extends Scene
-{
-    camera: Phaser.Cameras.Scene2D.Camera;
-    background: Phaser.GameObjects.Image;
-    msg_text : Phaser.GameObjects.Text;
-    platforms: Phaser.Physics.Arcade.StaticGroup;
+export class Game extends Scene {
+  camera: Phaser.Cameras.Scene2D.Camera;
+  background: Phaser.GameObjects.Image;
+  platforms: Phaser.Physics.Arcade.StaticGroup;
+  player1: Player;
+  player2: Player;
 
-    constructor ()
-    {
-        super('Game');
+  public constructor() {
+    super("Game");
+  }
+
+  public handleMap() {
+    // Create platforms
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(100, 800, "ground").setScale(1).refreshBody();
+    this.platforms.create(300, 800, "ground").setScale(1).refreshBody(); // ground
+    this.platforms.create(500, 800, "ground").setScale(1).refreshBody(); // ground
+    this.platforms.create(700, 800, "ground").setScale(1).refreshBody(); // ground
+    this.platforms.create(900, 800, "ground").setScale(1).refreshBody(); // ground
+  }
+
+  public create() {
+    this.camera = this.cameras.main;
+    this.camera.setBackgroundColor(0x00ff00);
+
+    this.background = this.add.image(512, 384, "background");
+    this.background.setAlpha(0.5);
+    this.handleMap();
+    this.createPlayers();
+    this.setupHealthBars();
+
+    const backgroundMusic = this.sound.add("backgroundMusicFight", {
+      volume: 0.5,
+      loop: true,
+    });
+    backgroundMusic.play();
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => this.reduceHealth(this.player1),
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  private createPlayers() {
+    this.player1 = new Player(PlayerID.Player1, this.add, "Player 1");
+    this.player2 = new Player(PlayerID.Player2, this.add, "Player 2");
+  }
+
+  private setupHealthBars() {
+    this.player1.updateHealthBar();
+    this.player2.updateHealthBar();
+  }
+
+  private reduceHealth(player: Player) {
+    if (player.health > 0) {
+      player.setHealth((player.health -= 10));
+      player.updateHealthBar();
     }
-
-    handleMap ()
-    {
-        // Create platforms
-        this.platforms = this.physics.add.staticGroup();
-        this.platforms.create(100, 800, 'ground').setScale(1).refreshBody();
-        this.platforms.create(300, 800, 'ground').setScale(1).refreshBody(); // ground
-        this.platforms.create(500, 800, 'ground').setScale(1).refreshBody(); // ground
-        this.platforms.create(700, 800, 'ground').setScale(1).refreshBody(); // ground
-        this.platforms.create(900, 800, 'ground').setScale(1).refreshBody(); // ground
-    }
-
-    create ()
-    {
-        this.camera = this.cameras.main;
-
-        this.background = this.add.image(512, 384, 'kpsBackground');
-        this.handleMap();
-    }
+  }
 }
