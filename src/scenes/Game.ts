@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { Player, PlayerID } from "../items/Player.ts";
+import Player from "../models/character/Player";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -37,29 +37,20 @@ export class Game extends Scene {
       loop: true,
     });
     backgroundMusic.play();
-
-    this.time.addEvent({
-      delay: 1000,
-      callback: () => this.reduceHealth(this.player1),
-      callbackScope: this,
-      loop: true,
-    });
   }
 
   private createPlayers() {
-    this.player1 = new Player(PlayerID.Player1, this.add, "Player 1");
-    this.player2 = new Player(PlayerID.Player2, this.add, "Player 2");
+    this.player1 = new Player(
+      this,
+      1,
+      "TESTNAME",
+      {},
+      { posX: 100, posY: 100 },
+      "player1",
+    );
   }
 
   private setupHealthBars() {
     this.player1.updateHealthBar();
-    this.player2.updateHealthBar();
-  }
-
-  private reduceHealth(player: Player) {
-    if (player.health > 0) {
-      player.setHealth((player.health -= 10));
-      player.updateHealthBar();
-    }
   }
 }
