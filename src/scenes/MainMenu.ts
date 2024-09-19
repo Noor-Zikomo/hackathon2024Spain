@@ -5,12 +5,16 @@ export class MainMenu extends Scene {
   logo: GameObjects.Image;
   title: GameObjects.Text;
 
-  constructor() {
+  public constructor() {
     super("MainMenu");
   }
 
-  create() {
-    this.background = this.add.image(window.innerWidth, window.innerHeight, "background");
+  public create() {
+    this.background = this.add.image(
+      window.innerWidth,
+      window.innerHeight,
+      "background",
+    );
 
     this.logo = this.add.image(512, 300, "logo");
 
@@ -24,6 +28,12 @@ export class MainMenu extends Scene {
         align: "center",
       })
       .setOrigin(0.5);
+
+    const backgroundMusic = this.sound.add("backgroundMusicMenu", {
+      volume: 0.5,
+      loop: true,
+    });
+    backgroundMusic.play();
 
     this.input.once("pointerdown", () => {
       this.scene.start("Game");
