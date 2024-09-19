@@ -1,6 +1,7 @@
 import { Scene } from "phaser";
-import { Item } from "../items/Item";
 import { Player, PlayerID } from "../items/Player.ts";
+import { Coffee } from "../items/Coffee.ts";
+import { Star } from "../items/Star.ts";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -11,10 +12,6 @@ export class Game extends Scene {
 
   public constructor() {
     super("Game");
-  }
-
-  public preload() {
-    this.load.image("star", "assets/star.png");
   }
 
   public create() {
@@ -53,13 +50,19 @@ export class Game extends Scene {
   }
 
   private addItems() {
-    const star = new Item("star");
     this.time.addEvent({
       delay: 5000,
-      callback: () => star.emitItem(this.physics, this.platforms),
+      callback: () => this.emitRandomItem(),
       callbackScope: this,
       loop: true,
     });
+  }
+
+  private emitRandomItem() {
+    const items = [new Star(), new Coffee()];
+    const randomIndex = Math.floor(Math.random() * items.length);
+    const randomItem = items[randomIndex];
+    randomItem.emitItem(this.physics, this.platforms);
   }
 
   private createPlayers() {
