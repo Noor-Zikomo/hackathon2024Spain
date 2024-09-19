@@ -5,7 +5,7 @@ export class Preloader extends Scene {
     super("Preloader");
   }
 
-  init() {
+  public init() {
     //  We loaded this image in our Boot Scene, so we can display it here
     this.add.image(window.innerWidth, window.innerHeight, "background");
 
@@ -22,14 +22,22 @@ export class Preloader extends Scene {
     });
   }
 
-  preload() {
+  public preload() {
     //  Load the assets for the game - Replace with your own assets
     this.load.setPath("assets");
 
     this.load.image("logo", "logo.png");
+    this.load.audio("backgroundMusicMenu", "audio/background-music-menu.mp3");
+    this.load.audio("backgroundMusicFight", "audio/background-music-fight.mp3");
+    this.load.css("fontStyles", "fonts/fonts.css");
+    this.load.image("star", "/items/star.png");
+    this.load.image("coffee", "/items/coffee.png");
+    this.load.image("snack", "food/43.png");
+    this.load.image("beer", "food/6.png");
+    this.load.image("kpsBackground", "kpsBackground.jpg");
   }
 
-  create() {
+  public create() {
     //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
     //  For example, you can define global animations here, so we can use them in other scenes.
 
