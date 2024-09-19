@@ -1,10 +1,17 @@
 import { GameObjects, Scene } from "phaser";
+import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
 
 const input: string = `<input type="text" name="nameField" placeholder="Player 1 Name" style="font-size: 20px" />`;
 
 export class CharacterSelection extends Scene {
   constructor() {
     super("CharacterSelection");
+  }
+
+  getRandomMap(): {} {
+    const mapData: {}[] = mapDataJSON;
+    const mapNumber: number = Math.floor(Math.random() * mapData.length);
+    return mapData[mapNumber];
   }
 
   background: GameObjects.Image;

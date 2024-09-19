@@ -28,7 +28,7 @@ export class GameOver extends Scene {
 
     this.add
       .text(512, 600, "PLAY AGAIN", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
         stroke: "#000000",

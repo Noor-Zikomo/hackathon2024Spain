@@ -24,10 +24,15 @@ export class MainMenu extends Scene {
     const { width } = this.sys.canvas;
 
     this.background = this.add.image(512, 384, "background");
+    const backgroundMusic = this.sound.add("backgroundMusicMenu", {
+      volume: 0.5,
+      loop: true,
+    });
+    backgroundMusic.play();
 
     this.add
       .text(512, 100, "MORTAL KPS", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
         stroke: "#000000",
@@ -38,7 +43,7 @@ export class MainMenu extends Scene {
 
     this.add
       .text(sideDistance + 150, 275, "CONTROLS", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 26,
         color: "#ffffff",
         stroke: "#000000",
@@ -63,7 +68,7 @@ export class MainMenu extends Scene {
 
     this.add
       .text(width - sideDistance - 150, 275, "ITEMS", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 26,
         color: "#ffffff",
         stroke: "#000000",
@@ -85,7 +90,7 @@ export class MainMenu extends Scene {
 
     this.add
       .text(512, 600, "PLAY", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
         stroke: "#000000",

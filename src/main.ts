@@ -23,6 +23,13 @@ const config: Types.Core.GameConfig = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   scene: [Boot, CharacterSelection, Preloader, MainMenu, MainGame, GameOver],
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { x: 0, y: 300 }, // gravity for the game
+      debug: false,
+    },
+  },
 };
 
 export default new Game(config);
