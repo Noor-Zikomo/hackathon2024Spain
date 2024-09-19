@@ -2,7 +2,10 @@ import { Scene } from "phaser";
 import { GameConfig, MapConfig, PlatformConfig } from "../types.ts";
 import { Player, PlayerID } from "../items/Player.ts";
 import { Coffee } from "../items/Coffee.ts";
-import { Star } from "../items/Star.ts";
+import { Beer } from "../items/Beer.ts";
+import { Snack } from "../items/Snack.ts";
+import { KpsToken } from "../items/Kps.ts";
+import { Item } from "../items/Item.ts";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -16,25 +19,7 @@ export class Game extends Scene {
     super("Game");
   }
 
-  handleMap() {
-    // Create platforms
-    this.platforms = this.physics.add.staticGroup();
-    const data: MapConfig = this.mapData;
-    this.load.image(data.id, "assets/backgrounds/" + data.id + ".jpg");
-    this.background = this.add.image(512, 382, data.id);
-    this.platformsGenerate(data.config);
-  }
-
-  platformsGenerate(platformConfig: PlatformConfig[]) {
-    this.platforms = this.physics.add.staticGroup();
-    platformConfig.forEach((platformConfig: PlatformConfig) => {
-      this.platforms
-        .create(platformConfig.x, platformConfig.y, platformConfig.key)
-        .setScale(platformConfig.scale);
-    });
-  }
-
-  create(data: GameConfig) {
+  public create(data: GameConfig) {
     this.mapData = data["mapData"];
     this.handleMap();
 
@@ -61,9 +46,29 @@ export class Game extends Scene {
       loop: true,
     });
   }
+
+  private handleMap() {
+    // Create platforms
+    this.platforms = this.physics.add.staticGroup();
+    const data: MapConfig = this.mapData;
+    this.load.image(data.id, "assets/backgrounds/" + data.id + ".jpg");
+    this.background = this.add.image(512, 382, data.id);
+    this.platformsGenerate(data.config);
+  }
+
+  private platformsGenerate(platformConfig: PlatformConfig[]) {
+    this.platforms = this.physics.add.staticGroup();
+    platformConfig.forEach((platformConfig: PlatformConfig) => {
+      this.platforms
+        .create(platformConfig.x, platformConfig.y, platformConfig.key)
+        .setScale(platformConfig.scale);
+    });
+  }
+
   private addItems() {
+    const randomNumber = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
     this.time.addEvent({
-      delay: 5000,
+      delay: randomNumber * 1000,
       callback: () => this.emitRandomItem(),
       callbackScope: this,
       loop: true,
@@ -71,9 +76,18 @@ export class Game extends Scene {
   }
 
   private emitRandomItem() {
-    const items = [new Star(), new Coffee()];
-    const randomIndex = Math.floor(Math.random() * items.length);
-    const randomItem = items[randomIndex];
+    let randomItem: Item;
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    if (randomNumber < 10) {
+      randomItem = new KpsToken();
+    } else if (randomNumber < 30) {
+      randomItem = new Beer();
+    } else if (randomNumber < 60) {
+      randomItem = new Snack();
+    } else {
+      randomItem = new Coffee();
+    }
+
     randomItem.emitItem(this.physics, this.platforms);
   }
 

@@ -14,7 +14,7 @@ export class Item {
     const y = 26;
     this.item = physics.add.image(x, y, this.name);
     this.item.setDisplaySize(30, 30);
-    this.item.setVelocity(0, 200);
+    this.item.setVelocity(0, 10);
     this.item.setInteractive();
     physics.add.collider(this.item, collider);
   }
