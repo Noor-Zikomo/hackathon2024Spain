@@ -1,22 +1,28 @@
 import { Scene } from "phaser";
+import { GameConfig, MapConfig, PlatformConfig } from "../types.ts";
 import { Coffee } from "../items/Coffee.ts";
-import { Star } from "../items/Star.ts";
-import Player from "../models/character/Player.ts";
+import { Beer } from "../items/Beer.ts";
+import { Snack } from "../items/Snack.ts";
+import { KpsToken } from "../items/Kps.ts";
+import { Item } from "../items/Item.ts";
 import Character, { PlayerID } from "../models/character/Character.ts";
-import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
   platforms: Phaser.Physics.Arcade.StaticGroup;
+  mapData: MapConfig;
   player1: Character;
   player2: Character;
 
-  public constructor() {
+  constructor() {
     super("Game");
   }
 
-  public create() {
+  public create(data: GameConfig) {
+    this.mapData = data["mapData"];
+    this.handleMap();
+
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0x00ff00);
 
@@ -43,21 +49,31 @@ export class Game extends Scene {
 
   public update() {
     this.player1.update();
+    this.player2.update();
   }
 
   private handleMap() {
     // Create platforms
     this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(100, 800, "ground").setScale(1).refreshBody();
-    this.platforms.create(300, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(500, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(700, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(900, 800, "ground").setScale(1).refreshBody(); // ground
+    const data: MapConfig = this.mapData;
+    this.load.image(data.id, "assets/backgrounds/" + data.id + ".jpg");
+    this.background = this.add.image(512, 382, data.id);
+    this.platformsGenerate(data.config);
+  }
+
+  private platformsGenerate(platformConfig: PlatformConfig[]) {
+    this.platforms = this.physics.add.staticGroup();
+    platformConfig.forEach((platformConfig: PlatformConfig) => {
+      this.platforms
+        .create(platformConfig.x, platformConfig.y, platformConfig.key)
+        .setScale(platformConfig.scale);
+    });
   }
 
   private addItems() {
+    const randomNumber = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
     this.time.addEvent({
-      delay: 5000,
+      delay: randomNumber * 1000,
       callback: () => this.emitRandomItem(),
       callbackScope: this,
       loop: true,
@@ -65,9 +81,18 @@ export class Game extends Scene {
   }
 
   private emitRandomItem() {
-    const items = [new Star(), new Coffee()];
-    const randomIndex = Math.floor(Math.random() * items.length);
-    const randomItem = items[randomIndex];
+    let randomItem: Item;
+    const randomNumber = Math.floor(Math.random() * 100) + 1;
+    if (randomNumber < 10) {
+      randomItem = new KpsToken();
+    } else if (randomNumber < 30) {
+      randomItem = new Beer();
+    } else if (randomNumber < 60) {
+      randomItem = new Snack();
+    } else {
+      randomItem = new Coffee();
+    }
+
     randomItem.emitItem(this.physics, this.platforms);
   }
 
@@ -83,7 +108,7 @@ export class Game extends Scene {
     this.player2 = new Character(
       PlayerID.Player2,
       "Player 2",
-      this.physics.add.sprite(100, 450, "dude"),
+      this.physics.add.sprite(-100, 450, "dude"),
       {},
       this,
     );

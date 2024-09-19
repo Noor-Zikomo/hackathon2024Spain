@@ -1,4 +1,5 @@
 import { Scene, GameObjects } from "phaser";
+import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
@@ -8,14 +9,13 @@ export class MainMenu extends Scene {
   public constructor() {
     super("MainMenu");
   }
+  getRandomMap(): {} {
+    const mapData: {}[] = mapDataJSON;
+    const mapNumber: number = Math.floor(Math.random() * mapData.length);
+    return mapData[mapNumber];
+  }
 
-  public create() {
-    this.background = this.add.image(
-      window.innerWidth,
-      window.innerHeight,
-      "background",
-    );
-
+  create() {
     this.logo = this.add.image(512, 300, "logo");
 
     this.title = this.add
@@ -36,7 +36,7 @@ export class MainMenu extends Scene {
     backgroundMusic.play();
 
     this.input.once("pointerdown", () => {
-      this.scene.start("Game");
+      this.scene.start("Game", { mapData: this.getRandomMap() });
     });
   }
 }
