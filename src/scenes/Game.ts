@@ -1,4 +1,5 @@
 import { Scene } from "phaser";
+import { Item } from "../items/Item";
 import { Player, PlayerID } from "../items/Player.ts";
 
 export class Game extends Scene {
@@ -12,14 +13,8 @@ export class Game extends Scene {
     super("Game");
   }
 
-  public handleMap() {
-    // Create platforms
-    this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(100, 800, "ground").setScale(1).refreshBody();
-    this.platforms.create(300, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(500, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(700, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(900, 800, "ground").setScale(1).refreshBody(); // ground
+  public preload() {
+    this.load.image("star", "assets/star.png");
   }
 
   public create() {
@@ -29,6 +24,7 @@ export class Game extends Scene {
     this.background = this.add.image(512, 384, "background");
     this.background.setAlpha(0.5);
     this.handleMap();
+    this.addItems();
     this.createPlayers();
     this.setupHealthBars();
 
@@ -41,6 +37,26 @@ export class Game extends Scene {
     this.time.addEvent({
       delay: 1000,
       callback: () => this.reduceHealth(this.player1),
+      callbackScope: this,
+      loop: true,
+    });
+  }
+
+  private handleMap() {
+    // Create platforms
+    this.platforms = this.physics.add.staticGroup();
+    this.platforms.create(100, 800, "ground").setScale(1).refreshBody();
+    this.platforms.create(300, 800, "ground").setScale(1).refreshBody(); // ground
+    this.platforms.create(500, 800, "ground").setScale(1).refreshBody(); // ground
+    this.platforms.create(700, 800, "ground").setScale(1).refreshBody(); // ground
+    this.platforms.create(900, 800, "ground").setScale(1).refreshBody(); // ground
+  }
+
+  private addItems() {
+    const star = new Item("star");
+    this.time.addEvent({
+      delay: 5000,
+      callback: () => star.emitItem(this.physics, this.platforms),
       callbackScope: this,
       loop: true,
     });
