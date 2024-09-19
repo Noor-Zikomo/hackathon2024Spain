@@ -1,5 +1,6 @@
 import { Scene } from "phaser";
 import Player from "../models/character/Player";
+import { Item } from "../items/Item";
 
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
@@ -12,14 +13,8 @@ export class Game extends Scene {
     super("Game");
   }
 
-  public handleMap() {
-    // Create platforms
-    this.platforms = this.physics.add.staticGroup();
-    this.platforms.create(100, 800, "ground").setScale(1).refreshBody();
-    this.platforms.create(300, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(500, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(700, 800, "ground").setScale(1).refreshBody(); // ground
-    this.platforms.create(900, 800, "ground").setScale(1).refreshBody(); // ground
+  public preload() {
+    this.load.image("star", "assets/star.png");
   }
 
   public create() {
@@ -29,6 +24,7 @@ export class Game extends Scene {
     this.background = this.add.image(512, 384, "background");
     this.background.setAlpha(0.5);
     this.handleMap();
+    this.addItems();
     this.createPlayers();
     this.setupHealthBars();
 
@@ -37,6 +33,13 @@ export class Game extends Scene {
       loop: true,
     });
     backgroundMusic.play();
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => this.reduceHealth(this.player1),
+      callbackScope: this,
+      loop: true,
+    });
   }
 
   private createPlayers() {

@@ -2,3 +2,4 @@
 /.idea/
 *iml
 /public/bundle.min.js
+/dist/

@@ -34,6 +34,7 @@ export class Preloader extends Scene {
           frameHeight: 48,
       });
       this.load.image("background", "sky.png");
+    this.load.css("fontStyles", "fonts/fonts.css");
   }
 
   public create() {
