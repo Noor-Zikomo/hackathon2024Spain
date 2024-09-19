@@ -1,14 +1,7 @@
 import { Item } from "./Item.ts";
 
-export class Coffee implements Item {
-  readonly name: string;
-  readonly image: string;
-
+export class Coffee extends Item {
   public constructor() {
-    this.name = "coffee";
-  }
-
-  public onCollision(player: any) {
-    player;
+    super("coffee");
   }
 }

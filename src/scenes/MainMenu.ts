@@ -10,7 +10,11 @@ export class MainMenu extends Scene {
   }
 
   create() {
-    this.background = this.add.image(window.innerWidth, window.innerHeight, "background");
+    this.background = this.add.image(
+      window.innerWidth,
+      window.innerHeight,
+      "background",
+    );
 
     this.logo = this.add.image(512, 300, "logo");
 
@@ -26,7 +30,7 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
 
     this.input.once("pointerdown", () => {
-      this.scene.start("GameTest");
+      this.scene.start("Game");
     });
   }
 }
