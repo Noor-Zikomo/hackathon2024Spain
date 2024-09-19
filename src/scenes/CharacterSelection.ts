@@ -1,12 +1,17 @@
 import { GameObjects, Scene } from "phaser";
 import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
+import { Music } from "./MainMenu.ts";
 
 const input: string = `<input type="text" name="nameField" placeholder="Player 1 Name" style="font-size: 20px" />`;
+
+type Data = { music: Music };
 
 export class CharacterSelection extends Scene {
   constructor() {
     super("CharacterSelection");
   }
+
+  music: Music;
 
   getRandomMap(): {} {
     const mapData: {}[] = mapDataJSON;
@@ -20,7 +25,8 @@ export class CharacterSelection extends Scene {
     this.load.html("nameform", "assets/characterSelectInput.html");
   }
 
-  create() {
+  create({ music }: Data) {
+    this.music = music;
     this.background = this.add.image(512, 384, "background");
 
     const player1Dom = this.add.dom(200, 300).createFromHTML(input);
@@ -37,7 +43,7 @@ export class CharacterSelection extends Scene {
 
     this.add
       .text(200, 600, "BACK", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
         stroke: "#000000",
@@ -50,7 +56,7 @@ export class CharacterSelection extends Scene {
 
     this.add
       .text(800, 600, "START", {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
         stroke: "#000000",
@@ -63,9 +69,10 @@ export class CharacterSelection extends Scene {
         const player1Name = player1Input?.value;
         const player2Name = player2Input?.value;
         if (player1Name && player2Name) {
+          this.music.destroy();
           this.scene.start("Game", {
-            player1Name,
-            player2Name,
+            mapData: this.getRandomMap(),
+            playerData: { player1Name, player2Name },
           });
         }
       });

@@ -11,6 +11,11 @@ type ItemsDisplay = {
   description: string;
 };
 
+export type Music =
+  | Phaser.Sound.NoAudioSound
+  | Phaser.Sound.HTML5AudioSound
+  | Phaser.Sound.WebAudioSound;
+
 const sideDistance: number = 150;
 
 export class MainMenu extends Scene {
@@ -24,7 +29,7 @@ export class MainMenu extends Scene {
     const { width } = this.sys.canvas;
 
     this.background = this.add.image(512, 384, "background");
-    const backgroundMusic = this.sound.add("backgroundMusicMenu", {
+    const backgroundMusic: Music = this.sound.add("backgroundMusicMenu", {
       volume: 0.5,
       loop: true,
     });
@@ -78,14 +83,16 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
 
     const items: Array<ItemsDisplay> = [
-      { icon: "Cafe", description: "Gives hp" },
+      { icon: "coffee", description: "Gives hp" },
     ];
 
     let initialItemsY: number = 350;
 
     items.forEach(({ icon, description }) => {
-      this.printText(width - sideDistance - 250, initialItemsY, icon);
-      this.printText(width - sideDistance - 50, initialItemsY, description);
+      this.add
+        .image(width - sideDistance - 250, initialItemsY, icon)
+        .setDisplaySize(30, 30);
+      this.printText(width - sideDistance - 100, initialItemsY, description);
     });
 
     this.add
@@ -99,13 +106,15 @@ export class MainMenu extends Scene {
       })
       .setOrigin(0.5)
       .setInteractive()
-      .on("pointerdown", () => this.scene.start("CharacterSelection"));
+      .on("pointerdown", () => {
+        this.scene.start("CharacterSelection", { music: backgroundMusic });
+      });
   }
 
   private printText(positionX: number, positionY: number, value: string): void {
     this.add
       .text(positionX, positionY, value, {
-        fontFamily: "Arial Black",
+        fontFamily: "main-font",
         fontSize: 20,
         color: "#ffffff",
         stroke: "#000000",

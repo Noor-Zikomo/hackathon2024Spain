@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { GameConfig, MapConfig, PlatformConfig } from "../types.ts";
+import { GameConfig, MapConfig, PlatformConfig, PlayerData } from "../types.ts";
 import { Player, PlayerID } from "../items/Player.ts";
 import { Coffee } from "../items/Coffee.ts";
 import { Star } from "../items/Star.ts";
@@ -34,14 +34,22 @@ export class Game extends Scene {
     });
   }
 
-  create(data: GameConfig) {
-    this.mapData = data["mapData"];
+  create({ mapData, playerData }: GameConfig) {
+    this.mapData = mapData;
 
+    this.handleMap();
     this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x00ff00);
 
-    this.background = this.add.image(512, 384, "background");
-    this.background.setAlpha(0.5);
+    this.camera.setBackgroundColor(0x00ff00);
+    this.addItems();
+    this.createPlayers(playerData);
+    this.setupHealthBars();
+
+    const backgroundMusic = this.sound.add("backgroundMusicFight", {
+      volume: 0.5,
+      loop: true,
+    });
+    backgroundMusic.play();
 
     this.add
       .text(800, 600, "END", {
@@ -54,18 +62,10 @@ export class Game extends Scene {
       })
       .setOrigin(0.5)
       .setInteractive()
-      .on("pointerdown", () => this.scene.start("GameOver"));
-
-    this.handleMap();
-    this.addItems();
-    this.createPlayers();
-    this.setupHealthBars();
-
-    const backgroundMusic = this.sound.add("backgroundMusicFight", {
-      volume: 0.5,
-      loop: true,
-    });
-    backgroundMusic.play();
+      .on("pointerdown", () => {
+        backgroundMusic.destroy();
+        this.scene.start("GameOver");
+      });
 
     this.time.addEvent({
       delay: 1000,
@@ -90,9 +90,9 @@ export class Game extends Scene {
     randomItem.emitItem(this.physics, this.platforms);
   }
 
-  private createPlayers() {
-    this.player1 = new Player(PlayerID.Player1, this.add, "Player 1");
-    this.player2 = new Player(PlayerID.Player2, this.add, "Player 2");
+  private createPlayers({ player1Name, player2Name }: PlayerData) {
+    this.player1 = new Player(PlayerID.Player1, this.add, player1Name);
+    this.player2 = new Player(PlayerID.Player2, this.add, player2Name);
   }
 
   private setupHealthBars() {
