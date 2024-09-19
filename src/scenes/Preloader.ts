@@ -35,6 +35,8 @@ export class Preloader extends Scene {
       });
       this.load.image("background", "sky.png");
     this.load.css("fontStyles", "fonts/fonts.css");
+    this.load.image("star", "/items/star.png");
+    this.load.image("coffee", "/items/coffee.png");
   }
 
   public create() {

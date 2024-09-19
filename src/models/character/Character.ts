@@ -1,3 +1,12 @@
+import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
+import {CursorOverrides} from "./Player.ts";
+import KeyboardPlugin = Phaser.Input.Keyboard.KeyboardPlugin;
+
+export enum PlayerID {
+  Player1,
+  Player2,
+}
+
 export enum AtackType {
   MELEE,
   RANGED,
@@ -21,45 +30,65 @@ export const yellow = 0xffff00;
 export const red = 0xff0000;
 export const white = 0xffffff;
 
-export const healthBarCoordinates: Map<number, Coordinates> = new Map<
+export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
   Coordinates
 >();
-healthBarCoordinates.set(1, { posX: 50, posY: 50 });
-healthBarCoordinates.set(2, { posX: 780, posY: 50 });
+healthBarCoordinates.set(PlayerID.Player1, { posX: 50, posY: 50 });
+healthBarCoordinates.set(PlayerID.Player2, { posX: 780, posY: 50 });
 
-export const playerNameCoordinates: Map<number, Coordinates> = new Map<
+export const playerNameCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
   Coordinates
 >();
-playerNameCoordinates.set(1, { posX: 50, posY: 10 });
-playerNameCoordinates.set(2, { posX: 780, posY: 10 });
+playerNameCoordinates.set(PlayerID.Player1, { posX: 50, posY: 10 });
+playerNameCoordinates.set(PlayerID.Player2, { posX: 780, posY: 10 });
 
-export default class Character extends Phaser.Physics.Arcade.Sprite {
+export default class Character {
   private readonly maxHealth: number = 100;
-  private id: number;
+  private cursors: CursorKeys;
+  private id: PlayerID;
   public nameBar: Phaser.GameObjects.Text;
   public healthBar: Phaser.GameObjects.Graphics;
   public stats: CharacterStats;
+  public playerSprite: Phaser.Physics.Arcade.Sprite;
+  private scene: Phaser.Scene
 
   constructor(
-    scene: Phaser.Scene,
     id: number,
     name: string,
+    playerSprite: Phaser.Physics.Arcade.Sprite,
     stats: Partial<CharacterStats>,
-    { posX, posY }: Coordinates,
-    texture: string,
-    frame?: string | number,
+    scene: Phaser.Scene,
   ) {
-    super(scene, posX, posY, texture, frame);
-
     this.id = id;
     this.setStats(stats);
-    this.createAnimations(scene);
+    this.playerSprite = playerSprite;
+    this.playerSprite.setBounce(0.2);
+    this.playerSprite.setCollideWorldBounds(true);
+    this.scene = scene;
+    this.createAnimations();
     this.generateHealthBar(id, name);
-
-    scene.physics.add.existing(this);
+    this.cursors = this.generateCursorKeys();
   }
+
+  public update(): void {
+      if (this.cursors?.left?.isDown) {
+        this.moveLeft();
+        this.playerSprite.anims.play("left", true);
+      } else if (this.cursors?.right?.isDown) {
+        this.moveRight();
+        this.playerSprite.anims.play("right", true);
+      } else {
+        this.playerSprite.setVelocityX(0);
+        this.playerSprite.anims.play("turn");
+      }
+
+      if (this.cursors.up?.isDown) {
+        this.jump();
+      }
+    }
+
 
   private generateHealthBar(id: number, name: string): void {
     const coordinates: Coordinates | undefined = playerNameCoordinates.get(id);
@@ -83,6 +112,26 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     this.healthBar = this.scene.add.graphics();
   }
 
+  private generateCursorKeys(
+      keysOverride?: CursorOverrides,
+  ): Phaser.Types.Input.Keyboard.CursorKeys {
+    let inputKeyword: KeyboardPlugin | null = this.scene.input.keyboard;
+
+    if (!inputKeyword) {
+      throw new Error("No keyboard plugin found in scene");
+    }
+    const defaultCursorKeys: CursorKeys = inputKeyword.createCursorKeys();
+
+    return {
+      down: keysOverride?.down ?? defaultCursorKeys.down,
+      shift: keysOverride?.dash ?? defaultCursorKeys.shift,
+      space: keysOverride?.attack ?? defaultCursorKeys.space,
+      left: keysOverride?.left ?? defaultCursorKeys.left,
+      right: keysOverride?.right ?? defaultCursorKeys.right,
+      up: keysOverride?.up ?? defaultCursorKeys.up,
+    };
+  }
+
   private setStats(stats: Partial<CharacterStats>): void {
     this.stats = {
       health: stats.health ?? 100,
@@ -93,24 +142,48 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     };
   }
 
-  public createAnimations(_scene: Phaser.Scene): void {
-    // Placeholder for character-specific animations
+  public createAnimations(): void {
+    this.scene.anims.create({
+      key: "left",
+      frames: this.scene.anims.generateFrameNumbers("dude", {
+        start: 0,
+        end: 3,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.scene.anims.create({
+      key: "turn",
+      frames: [{ key: "dude", frame: 4 }],
+      frameRate: 20,
+    });
+
+    this.scene.anims.create({
+      key: "right",
+      frames: this.scene.anims.generateFrameNumbers("dude", {
+        start: 5,
+        end: 8,
+      }),
+      frameRate: 10,
+      repeat: -1,
+    });
   }
 
   protected moveLeft(): void {
-    this.setVelocityX(-this.stats.speed);
+    this.playerSprite.setVelocityX(-this.stats.speed);
   }
 
   protected moveRight(): void {
-    this.setVelocityX(this.stats.speed);
+    this.playerSprite.setVelocityX(this.stats.speed);
   }
 
   protected jump(): void {
     console.log("Jump", this.stats.doubleJump);
     if (this.stats.doubleJump) {
-      this.setVelocityY(-400);
-    } else if (this.body?.blocked.down) {
-      this.setVelocityY(-500);
+      this.playerSprite.setVelocityY(-400);
+    } else if (this.playerSprite.body?.blocked.down) {
+      this.playerSprite.setVelocityY(-500);
     }
   }
 
@@ -131,31 +204,29 @@ export default class Character extends Phaser.Physics.Arcade.Sprite {
     console.log("Ranged attack", this.stats.attackDamage);
   }
 
-  public powerUp(stats: CharacterStats, time: number, frame?: string): void {
-    this.setStats(stats);
+  // public powerUp(stats: CharacterStats, time: number, frame?: string): void {
+  //   this.setStats(stats);
+  //
+  //   if (frame) {
+  //     this.setTexture(frame, frame);
+  //   }
+  //
+  //   this.scene.time.delayedCall(time, () => {
+  //     this.setStats({});
+  //   });
+  // }
 
-    if (frame) {
-      this.setTexture(frame, frame);
-    }
+  // public takeDamage(amount: number): void {
+  //   this.stats.health -= amount;
+  //   if (this.stats.health <= 0) {
+  //     this.die();
+  //   }
+  // }
 
-    this.scene.time.delayedCall(time, () => {
-      this.setStats({});
-    });
-  }
-
-  public takeDamage(amount: number): void {
-    this.stats.health -= amount;
-    if (this.stats.health <= 0) {
-      this.die();
-    }
-  }
-
-  private die(): void {
-    this.setActive(false);
-    this.setVisible(false);
-  }
-
-  update(): void {}
+  // private die(): void {
+  //   this.setActive(false);
+  //   this.setVisible(false);
+  // }
 
   public setHealth(newHealth: number) {
     this.stats.health = newHealth;
