@@ -46,7 +46,6 @@ const DASH_DURATION: number = 200;
 const DASH_COOLDOWN: number = 1000;
 const JUMP_BREAKER_VELOCITY: number = 400;
 
-
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
   Coordinates
