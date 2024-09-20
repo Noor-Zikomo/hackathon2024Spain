@@ -1,5 +1,6 @@
 import { Item } from "./Item.ts";
 import Character from "../models/character/Character.ts";
+import configuration from "../../src/configuration.json";
 
 export class Beer extends Item {
   public constructor() {
@@ -11,13 +12,13 @@ export class Beer extends Item {
     const originalAtk = player.stats.attackDamage;
     player.setStats({
       ...player.stats,
-      attackDamage: originalAtk + 10,
+      attackDamage: originalAtk + configuration["beer"]["atkBoost"],
     });
-    player.scene.time.delayedCall(10000, () => {
+    player.scene.time.delayedCall(configuration["beer"]["delay"], () => {
       const modifiedAtk = player.stats.attackDamage;
       player.setStats({
         ...player.stats,
-        attackDamage: modifiedAtk - 10,
+        attackDamage: modifiedAtk - configuration["beer"]["atkBoost"],
       });
     });
   }

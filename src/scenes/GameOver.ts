@@ -20,7 +20,12 @@ export class GameOver extends Scene {
     this.background = this.add
       .image(512, 384, "gameOver")
       .setDisplaySize(1024, 768);
-    this.add.rectangle(512, 400, 1024, 900).setFillStyle(0, 100);
+
+    this.sound
+      .add("backgroundMusicWinner", {
+        volume: 0.5,
+      })
+      .play();
 
     this.gameover_text = this.add.text(512, 384, winner + " wins", {
       fontFamily: "main-font",

@@ -403,7 +403,7 @@ export default class Character {
       key: `${playerId}-hurt`,
       frames: this.scene.anims.generateFrameNumbers(`player${playerId}_hurt`, {
         start: 0,
-        end: 3,
+        end: 2,
       }),
       frameRate: 10,
       repeat: -1,
