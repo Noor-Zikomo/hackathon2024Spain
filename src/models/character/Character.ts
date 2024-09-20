@@ -37,13 +37,13 @@ export const MAX_HEALTH: number = 100;
 export const COOLDOWN_ATTACK: number = 500;
 export const KNOCK_BACK_POWER: number = 300;
 const DOUBLE_JUMP_COOLDOWN: number = 400;
-const JUMP_VELOCITY: number = -600;
-const DOUBLE_JUMP_VELOCITY: number = -500;
-const PLAYER_WEIGHT: number = 600;
+const JUMP_VELOCITY: number = -700;
+const DOUBLE_JUMP_VELOCITY: number = -600;
+const PLAYER_WEIGHT: number = 1000;
 const BOUNCE: number = 0.2;
 const DASH_VELOCITY: number = 600;
-const DASH_DURATION: number = 200;
-const DASH_COOLDOWN: number = 700;
+const DASH_DURATION: number = 300;
+const DASH_COOLDOWN: number = 600;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
@@ -78,6 +78,7 @@ export default class Character {
   private jumpCooldown: boolean = false;
   private isDashing: boolean = false;
   private canDash: boolean = true;
+  private isDead: boolean = false;
 
   constructor(
     id: number,
@@ -92,8 +93,8 @@ export default class Character {
     this.playerSprite.setBounce(BOUNCE);
     this.playerSprite.setCollideWorldBounds(true);
     this.playerSprite.setGravityY(PLAYER_WEIGHT);
-    this.playerSprite.setSize(45, 80);
-    this.playerSprite.setOffset(35, 50);
+    this.playerSprite.setSize(35, 80);
+    this.playerSprite.setOffset(45, 50);
 
     this.scene = scene;
     this.createAnimations();
@@ -113,56 +114,69 @@ export default class Character {
 
   public update(): void {
     const playerId = this.id;
-    if (this.keys.left.isDown && !this.isDashing) {
-      this.moveLeft();
-      this.lastFlipX = true;
-      this.playerSprite.flipX = true;
-      this.playerSprite.anims.play(`${playerId}-left`, true);
-    } else if (this.keys.right.isDown && !this.isDashing) {
-      this.moveRight();
-      this.playerSprite.flipX = false;
-      this.playerSprite.anims.play(`${playerId}-right`, true);
-      this.lastFlipX = false;
-    } else if (this.knockBack) {
-      this.handleKnockBack(this.knockBack);
-      this.playerSprite.anims.play(`${playerId}-right`, true);
-    } else if (!this.isDashing) {
-      this.playerSprite.setVelocityX(0);
-      this.playerSprite.anims.play(`${playerId}-turn`);
+
+    if (this.health <= 0 && !this.isDead) {
+      this.playDeathAnimation();
+      this.isDead = true;
+      return;
     }
 
-    if (
-      this.keys.dash.isDown &&
-      (this.keys.left.isDown || this.keys.right.isDown) &&
-      !this.isDashing
-    ) {
-      if (this.keys.left.isDown) {
-        this.performDash("left");
-      } else if (this.keys.right.isDown) {
-        this.performDash("right");
+    if (!this.isDead) {
+      if (this.keys.left.isDown && !this.isDashing) {
+        this.moveLeft();
+        this.lastFlipX = true;
+        this.playerSprite.flipX = true;
+        this.playerSprite.anims.play(`${playerId}-left`, true);
+      } else if (this.keys.right.isDown && !this.isDashing) {
+        this.moveRight();
+        this.playerSprite.flipX = false;
+
+        this.playerSprite.anims.play(`${playerId}-right`, true);
+        this.lastFlipX = false;
+      } else if (this.knockBack) {
+        this.handleKnockBack(this.knockBack);
+        this.playerSprite.anims.play(`${playerId}-right`, true);
+      } else if (!this.isDashing) {
+        this.playerSprite.setVelocityX(0);
+        this.playerSprite.anims.play(`${playerId}-turn`);
       }
-    }
 
-    if (this.keys.up.isDown && !this.jumpCooldown) {
-      if (this.playerSprite.body?.blocked.down) {
-        this.performJump(JUMP_VELOCITY);
-        this.isJumping = true;
-        this.canDoubleJump = true;
-      } else if (this.isJumping && this.canDoubleJump) {
-        this.performJump(DOUBLE_JUMP_VELOCITY);
-        this.canDoubleJump = false;
+      if (
+        this.keys.dash.isDown &&
+        (this.keys.left.isDown || this.keys.right.isDown) &&
+        !this.isDashing
+      ) {
+        if (this.keys.left.isDown) {
+          this.performDash("left");
+        } else if (this.keys.right.isDown) {
+          this.performDash("right");
+        }
       }
-    }
 
-    if (this.playerSprite.body?.blocked.down && !this.isJumping) {
-      this.resetJumpFlags();
-    }
+      if (this.keys.up.isDown && !this.jumpCooldown) {
+        if (this.playerSprite.body?.blocked.down) {
+          this.performJump(JUMP_VELOCITY);
+          this.isJumping = true;
+          this.canDoubleJump = true;
+        } else if (this.isJumping && this.canDoubleJump) {
+          this.performJump(DOUBLE_JUMP_VELOCITY);
+          this.canDoubleJump = false;
+        }
+      }
 
-    if (this.keys.attack.isDown && this.canAttack) {
-      this.performAttack();
-    }
+      if (this.playerSprite.body?.blocked.down && !this.isJumping) {
+        this.resetJumpFlags();
+      }
 
-    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
+      if (this.keys.attack.isDown && this.canAttack) {
+        this.performAttack();
+        this.playerSprite.anims.play(`${playerId}-attack`, true);
+      }
+
+      this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
+      this.attackHitBox.y = this.playerSprite.y;
+    }
+    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -36 : 33);
     this.attackHitBox.y = this.playerSprite.y;
   }
 
@@ -204,6 +218,11 @@ export default class Character {
     setTimeout(() => {
       this.isAttacking = false;
     }, 100);
+  }
+
+  private playDeathAnimation(): void {
+    this.playerSprite.anims.play(`${this.id}-dead`, true);
+    this.playerSprite.setVelocity(0);
   }
 
   public attack(enemy: Character): void {
@@ -353,6 +372,29 @@ export default class Character {
         start: 0,
         end: 9,
       }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.scene.anims.create({
+      key: `${playerId}-dead`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}_dead`, {
+        start: 0,
+        end: 4,
+      }),
+      frameRate: 4,
+      repeat: 0,
+    });
+
+    this.scene.anims.create({
+      key: `${playerId}-attack`,
+      frames: this.scene.anims.generateFrameNumbers(
+        `player${playerId}_attack`,
+        {
+          start: 2,
+          end: 3,
+        },
+      ),
       frameRate: 10,
       repeat: -1,
     });

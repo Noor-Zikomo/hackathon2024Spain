@@ -22,6 +22,7 @@ export class Boot extends Scene {
     this.load.image("platform7", "assets/tiles/platform7.png");
     this.load.image("platform8", "assets/tiles/platform8.png");
     this.load.image("platform9", "assets/tiles/platform9.png");
+    this.load.image("platform10", "assets/tiles/platform10.png");
   }
 
   create() {
