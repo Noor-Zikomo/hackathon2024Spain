@@ -6,7 +6,7 @@ import { Preloader } from "./scenes/Preloader";
 
 import { Game, Types } from "phaser";
 import { CharacterSelection } from "./scenes/CharacterSelection.ts";
-import {StartScreen} from "./scenes/StartScreen.ts";
+import { StartScreen } from "./scenes/StartScreen.ts";
 
 const config: Types.Core.GameConfig = {
   type: Phaser.AUTO,
@@ -21,7 +21,15 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, StartScreen, CharacterSelection, Preloader, MainMenu, MainGame, GameOver],
+  scene: [
+    Boot,
+    StartScreen,
+    CharacterSelection,
+    Preloader,
+    MainMenu,
+    MainGame,
+    GameOver,
+  ],
   physics: {
     default: "arcade",
     arcade: {

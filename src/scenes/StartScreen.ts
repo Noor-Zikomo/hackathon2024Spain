@@ -32,14 +32,16 @@ export class StartScreen extends Scene {
         align: "center",
       })
       .setOrigin(1);
-    this.add.text(450, 250, "KPS", {
-      fontFamily: "main-font",
-      fontSize: 80,
-      color: "#00a6ff",
-      stroke: "#000000",
-      strokeThickness: 8,
-      align: "center",
-    }).setOrigin(-0.5);
+    this.add
+      .text(450, 250, "KPS", {
+        fontFamily: "main-font",
+        fontSize: 80,
+        color: "#00a6ff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(-0.5);
 
     this.add
       .text(512, 500, "START", {
