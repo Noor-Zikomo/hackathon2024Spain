@@ -96,7 +96,7 @@
         "x": 500,
         "y": 300,
         "scale": 1,
-        "key": "platform8"
+        "key": "platform10"
       }
     ]
   },
@@ -158,13 +158,13 @@
         "key": "platform6"
       },
       {
-        "x": 250,
+        "x": 200,
         "y": 300,
         "scale": 1,
         "key": "platform7"
       },
       {
-        "x": 750,
+        "x": 800,
         "y": 300,
         "scale": 1,
         "key": "platform7"
