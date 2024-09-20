@@ -8,8 +8,11 @@ export class Coffee extends Item {
 
   public onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
     super.onCollision(item, player);
-    console.log("coffee");
-    player.setHealth((player.health += 20));
-    player.updateHealthBar();
+    const originalSpeed = player.stats.speed;
+    player.setStats({ ...player.stats, speed: originalSpeed + 300 });
+    player.scene.time.delayedCall(10000, () => {
+      const modifiedSpeed = player.stats.speed;
+      player.setStats({ ...player.stats, speed: modifiedSpeed - 300 });
+    });
   }
 }
