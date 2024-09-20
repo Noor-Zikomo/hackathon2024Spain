@@ -1,0 +1,23 @@
+{
+  "beer": {
+    "atkBoost": 10,
+    "delay": 5000
+  },
+  "coffee": {
+    "speedBoost": 300,
+    "delay": 5000
+  },
+  "kps": {
+    "speedBoost": 300,
+    "atkBoost": 10,
+    "heal": 20,
+    "delay": 5000
+  },
+  "snack": {
+    "heal": 20
+  },
+  "player": {
+    "maxHealth": 100,
+    "maxSpeed": 600
+  }
+}
