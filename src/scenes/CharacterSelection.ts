@@ -2,7 +2,8 @@ import { GameObjects, Scene } from "phaser";
 import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
 import { Music } from "./MainMenu.ts";
 
-const input: string = `<input type="text" name="nameField" placeholder="Player 1 Name" style="font-size: 20px" />`;
+const input1: string = `<input type="text" name="nameField" placeholder="Player 1 Name" style="font-size: 20px" />`;
+const input2: string = `<input type="text" name="nameField" placeholder="Player 2 Name" style="font-size: 20px" />`;
 
 type Data = { music: Music };
 
@@ -21,21 +22,32 @@ export class CharacterSelection extends Scene {
 
   background: GameObjects.Image;
 
-  preload() {
-    this.load.html("nameform", "assets/characterSelectInput.html");
-  }
-
   create({ music }: Data) {
     this.music = music;
     this.background = this.add.image(512, 384, "background");
 
-    const player1Dom = this.add.dom(200, 300).createFromHTML(input);
+    const player1Dom = this.add.dom(200, 100).createFromHTML(input1);
 
     const player1Input: HTMLInputElement | null = player1Dom.getChildByName(
       "nameField",
     ) as HTMLInputElement | null;
 
-    const player2Dom = this.add.dom(800, 300).createFromHTML(input);
+    const player2Dom = this.add.dom(800, 100).createFromHTML(input2);
+    let selectedBackround: number = 0;
+
+    const bg1 = this.add
+      .image(200, 350, "kpsBackground")
+      .setDisplaySize(200, 200).on('pointerover', () => {
+          bg1.
+        });
+
+    const bg2 = this.add
+      .image(500, 350, "kpsBackground2")
+      .setDisplaySize(200, 200);
+
+    const bg3 = this.add
+      .image(800, 350, "kpsBackground")
+      .setDisplaySize(200, 200);
 
     const player2Input: HTMLInputElement | null = player2Dom.getChildByName(
       "nameField",

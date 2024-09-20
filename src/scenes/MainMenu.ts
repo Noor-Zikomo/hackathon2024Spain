@@ -83,7 +83,10 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
 
     const items: Array<ItemsDisplay> = [
-      { icon: "coffee", description: "Gives hp" },
+      { icon: "coffee", description: "Speed up" },
+      { icon: "kpsToken", description: "Power up" },
+      { icon: "snack", description: "Gives hp" },
+      { icon: "beer", description: "Gives strength" },
     ];
 
     let initialItemsY: number = 350;
@@ -93,6 +96,8 @@ export class MainMenu extends Scene {
         .image(width - sideDistance - 250, initialItemsY, icon)
         .setDisplaySize(30, 30);
       this.printText(width - sideDistance - 100, initialItemsY, description);
+
+      initialItemsY += 50;
     });
 
     this.add
