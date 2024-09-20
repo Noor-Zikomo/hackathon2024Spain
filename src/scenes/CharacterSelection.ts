@@ -43,11 +43,11 @@ export class CharacterSelection extends Scene {
     const player2Input: HTMLInputElement | null = player2Dom.getChildByName(
       "nameField",
     ) as HTMLInputElement | null;
-    this.add.image(800, 200, "character2");
+    this.add.image(800, 200, "character2").setFlipX(true);
 
     this.selectedMapBorder = this.add
       .rectangle(175, mapSelectorPositionY, 300, 200)
-      .setStrokeStyle(4, 0);
+      .setStrokeStyle(4, -255);
 
     this.add.text(150, countryNamePosition, "UK", {
       fontFamily: "main-font",
