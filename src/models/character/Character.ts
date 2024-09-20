@@ -53,7 +53,7 @@ export default class Character {
   public stats: CharacterStats;
   public playerSprite: Phaser.Physics.Arcade.Sprite;
   public isAttacking: boolean;
-  private scene: Phaser.Scene;
+  public scene: Phaser.Scene;
 
   constructor(
     id: number,
@@ -194,7 +194,7 @@ export default class Character {
     }
   }
 
-  private setStats(stats: Partial<CharacterStats>): void {
+  public setStats(stats: Partial<CharacterStats>): void {
     this.stats = {
       speed: stats.speed ?? 200,
       attackDamage: stats.attackDamage ?? 10,
