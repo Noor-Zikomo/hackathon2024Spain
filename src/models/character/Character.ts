@@ -29,8 +29,8 @@ export const red = 0xff0000;
 export const white = 0xffffff;
 export const MAX_HEALTH: number = 100;
 const DOUBLE_JUMP_COOLDOWN: number = 500;
-const JUMP_VELOCITY: number = -400;
-const DOUBLE_JUMP_VELOCITY: number = -400;
+const JUMP_VELOCITY: number = -600;
+const DOUBLE_JUMP_VELOCITY: number = -500;
 const PLAYER_WEIGHT: number = 600;
 const BOUNCE: number = 0.2;
 
@@ -100,9 +100,7 @@ export default class Character {
         this.performJump(JUMP_VELOCITY);
         this.isJumping = true;
         this.canDoubleJump = true;
-      }
-
-      else if (this.isJumping && this.canDoubleJump) {
+      } else if (this.isJumping && this.canDoubleJump) {
         this.performJump(DOUBLE_JUMP_VELOCITY);
         this.canDoubleJump = false;
       }
@@ -123,7 +121,6 @@ export default class Character {
     }
   }
 
-
   private performJump(velocityY: number): void {
     this.playerSprite.setVelocityY(velocityY);
     this.jumpCooldown = true;
@@ -138,8 +135,6 @@ export default class Character {
     this.canDoubleJump = false;
     this.jumpCooldown = false;
   }
-
-
 
   private performAttack() {
     this.isAttacking = true;
