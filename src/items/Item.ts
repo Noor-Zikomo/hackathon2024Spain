@@ -13,7 +13,8 @@ export class Item {
   public emitItem(
     physics: ArcadePhysics,
     platforms: ArcadeColliderType,
-    player: Character,
+    player1: Character,
+    player2: Character,
   ): void {
     const x = Phaser.Math.Between(25, 775);
     const y = 26;
@@ -21,22 +22,24 @@ export class Item {
     this.item.setDisplaySize(30, 30);
     this.item.setVelocity(0, 1);
     this.item.setInteractive();
-    console.log("emits item for", player);
-    console.log("physiscs", physics);
     physics.add.collider(this.item, platforms);
+    this.addCollisionWithItems(physics, player1);
+    this.addCollisionWithItems(physics, player2);
+  }
+
+  protected onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
+    const powerUpSound = player.scene.sound.add("powerUp", { volume: 2 });
+    powerUpSound.play();
+    item.disableBody(true, true);
+  }
+
+  private addCollisionWithItems(physics: ArcadePhysics, player: Character) {
     physics.add.collider(
-      player.playerSprite,
       this.item,
+      player.playerSprite,
       () => this.onCollision(this.item, player),
       undefined,
       player.scene,
     );
-  }
-
-  protected onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
-    console.log("item", item, "player", player);
-    const powerUpSound = player.scene.sound.add("powerUp", { volume: 2 });
-    powerUpSound.play();
-    item.disableBody(true, true);
   }
 }

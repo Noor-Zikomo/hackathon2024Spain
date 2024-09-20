@@ -121,8 +121,8 @@ export default class Character {
     } else if (this.keys.right.isDown && !this.isDashing) {
       this.moveRight();
       this.playerSprite.flipX = false;
-      this.lastFlipX = false;
       this.playerSprite.anims.play(`${playerId}-right`, true);
+      this.lastFlipX = false;
     } else if (this.knockBack) {
       this.handleKnockBack(this.knockBack);
       this.playerSprite.anims.play(`${playerId}-right`, true);
