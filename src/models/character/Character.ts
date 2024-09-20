@@ -41,7 +41,7 @@ const PLAYER_WEIGHT: number = 600;
 const BOUNCE: number = 0.2;
 const DASH_VELOCITY: number = 600;
 const DASH_DURATION: number = 200;
-const DASH_COOLDOWN: number = 1000;
+const DASH_COOLDOWN: number = 700;
 const JUMP_BREAKER_VELOCITY: number = 400;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
