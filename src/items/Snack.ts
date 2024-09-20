@@ -8,8 +8,10 @@ export class Snack extends Item {
 
   public onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
     super.onCollision(item, player);
-    console.log("snack");
-    player.setHealth((player.health += 20));
+    player.setHealth((player.health += 50));
+    if (player.health > 100) {
+      player.setHealth(100);
+    }
     player.updateHealthBar();
   }
 }

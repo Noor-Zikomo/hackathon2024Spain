@@ -14,7 +14,6 @@ export class Item {
     physics: ArcadePhysics,
     platforms: ArcadeColliderType,
     player: Character,
-    scene: Phaser.Scene,
   ): void {
     const x = Phaser.Math.Between(25, 775);
     const y = 26;
@@ -23,16 +22,14 @@ export class Item {
     this.item.setVelocity(0, 1);
     this.item.setInteractive();
     physics.add.collider(this.item, platforms);
-    physics.add.collider(
-      this.item,
-      player.playerSprite,
-      () => this.onCollision(this.item, player),
-      undefined,
-      scene,
+    physics.add.collider(this.item, player.playerSprite, () =>
+      this.onCollision(this.item, player),
     );
   }
 
-  protected onCollision(item: Phaser.Physics.Arcade.Image, _player: Character) {
+  protected onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
+    const powerUpSound = player.scene.sound.add("powerUp", { volume: 2 });
+    powerUpSound.play();
     item.disableBody(true, true);
   }
 }
