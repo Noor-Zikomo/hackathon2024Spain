@@ -31,12 +31,14 @@ export class MainMenu extends Scene {
   create() {
     const { width } = this.sys.canvas;
 
-    this.background = this.add.image(512, 384, "background");
+    this.background = this.add.image(512, 384, "main");
     const backgroundMusic: Music = this.sound.add("backgroundMusicMenu", {
       volume: 0.5,
       loop: true,
     });
     backgroundMusic.play();
+
+    this.add.rectangle(512, 400, 1024, 900).setFillStyle(0, 100);
 
     this.add
       .text(512, 100, "MORTAL KPS", {
@@ -60,13 +62,31 @@ export class MainMenu extends Scene {
       })
       .setOrigin(0.5);
 
+    this.add.text(sideDistance, 225, "PLAYER 1", {
+      fontFamily: "main-font",
+      fontSize: 26,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
+
+    this.add.text(sideDistance + 300, 225, "PLAYER 2", {
+      fontFamily: "main-font",
+      fontSize: 26,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
+
     const player1Controls: ControlsDisplay = {
       jump: "↑",
       left: "←",
       right: "→",
       attack: "o",
       doubleJump: "↑ ↑",
-      dash: "v",
+      dash: "P",
     };
 
     this.displayControls(player1Controls, sideDistance);
@@ -100,7 +120,7 @@ export class MainMenu extends Scene {
       { icon: "beer", description: "Gives strength" },
     ];
 
-    let initialItemsY: number = 250;
+    let initialItemsY: number = 300;
 
     items.forEach(({ icon, description }) => {
       this.add
@@ -112,7 +132,7 @@ export class MainMenu extends Scene {
     });
 
     this.add
-      .text(512, 600, "PLAY", {
+      .text(512, 700, "PLAY", {
         fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
@@ -139,7 +159,7 @@ export class MainMenu extends Scene {
   }
 
   private displayControls(controls: ControlsDisplay, positionX: number): void {
-    let initialControlsY: number = 250;
+    let initialControlsY: number = 300;
 
     Object.entries(controls).forEach(
       ([key, controlValue]: [string, string]) => {
