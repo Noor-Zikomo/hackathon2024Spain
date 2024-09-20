@@ -5,6 +5,8 @@ type ControlsDisplay = {
   left: string;
   right: string;
   attack: string;
+  doubleJump: string;
+  dash: string;
 };
 
 type ItemsDisplay = {
@@ -17,7 +19,7 @@ export type Music =
   | Phaser.Sound.HTML5AudioSound
   | Phaser.Sound.WebAudioSound;
 
-const sideDistance: number = 150;
+const sideDistance: number = 50;
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
@@ -48,7 +50,7 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(sideDistance + 150, 275, "CONTROLS", {
+      .text(sideDistance + 250, 175, "CONTROLS", {
         fontFamily: "main-font",
         fontSize: 26,
         color: "#ffffff",
@@ -62,7 +64,9 @@ export class MainMenu extends Scene {
       jump: "↑",
       left: "←",
       right: "→",
-      attack: "↵",
+      attack: "o",
+      doubleJump: "↑ ↑",
+      dash: "v",
     };
 
     this.displayControls(player1Controls, sideDistance);
@@ -71,13 +75,15 @@ export class MainMenu extends Scene {
       jump: "W",
       left: "A",
       right: "D",
-      attack: "R",
+      attack: "C",
+      doubleJump: "W W",
+      dash: "V",
     };
 
-    this.displayControls(player2Controls, sideDistance + 200);
+    this.displayControls(player2Controls, sideDistance + 300);
 
     this.add
-      .text(width - sideDistance - 150, 275, "ITEMS", {
+      .text(width - sideDistance - 200, 175, "ITEMS", {
         fontFamily: "main-font",
         fontSize: 26,
         color: "#ffffff",
@@ -94,13 +100,13 @@ export class MainMenu extends Scene {
       { icon: "beer", description: "Gives strength" },
     ];
 
-    let initialItemsY: number = 350;
+    let initialItemsY: number = 250;
 
     items.forEach(({ icon, description }) => {
       this.add
-        .image(width - sideDistance - 250, initialItemsY, icon)
+        .image(width - sideDistance - 300, initialItemsY, icon)
         .setDisplaySize(30, 30);
-      this.printText(width - sideDistance - 100, initialItemsY, description);
+      this.printText(width - sideDistance - 200, initialItemsY, description);
 
       initialItemsY += 50;
     });
@@ -122,20 +128,18 @@ export class MainMenu extends Scene {
   }
 
   private printText(positionX: number, positionY: number, value: string): void {
-    this.add
-      .text(positionX, positionY, value, {
-        fontFamily: "main-font",
-        fontSize: 20,
-        color: "#ffffff",
-        stroke: "#000000",
-        strokeThickness: 8,
-        align: "center",
-      })
-      .setOrigin(0.5);
+    this.add.text(positionX, positionY, value, {
+      fontFamily: "main-font",
+      fontSize: 20,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
   }
 
   private displayControls(controls: ControlsDisplay, positionX: number): void {
-    let initialControlsY: number = 350;
+    let initialControlsY: number = 250;
 
     Object.entries(controls).forEach(
       ([key, controlValue]: [string, string]) => {
