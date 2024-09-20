@@ -80,7 +80,7 @@ export class MainMenu extends Scene {
       align: "center",
     });
 
-    const player1Controls: ControlsDisplay = {
+    const player2Controls: ControlsDisplay = {
       left: "←",
       right: "→",
       jump: "↑",
@@ -89,9 +89,7 @@ export class MainMenu extends Scene {
       dash: "P",
     };
 
-    this.displayControls(player1Controls, sideDistance);
-
-    const player2Controls: ControlsDisplay = {
+    const player1Controls: ControlsDisplay = {
       left: "A",
       right: "D",
       jump: "W",
@@ -100,6 +98,7 @@ export class MainMenu extends Scene {
       dash: "V",
     };
 
+    this.displayControls(player1Controls, sideDistance);
     this.displayControls(player2Controls, sideDistance + 300);
 
     this.add
