@@ -4,6 +4,7 @@ import { Music } from "./MainMenu.ts";
 
 const input1: string = `<input type="text" name="nameField" placeholder="Player 1" value="Player 1" style="font-size: 20px" />`;
 const input2: string = `<input type="text" name="nameField" placeholder="Player 2" value="Player 2" style="font-size: 20px" />`;
+const mapSelectorPostionY: number = 450;
 
 type Data = { music: Music };
 
@@ -33,15 +34,22 @@ export class CharacterSelection extends Scene {
       "nameField",
     ) as HTMLInputElement | null;
 
+    this.add.image(200, 200, "character1");
+
     const player2Dom = this.add.dom(800, 100).createFromHTML(input2);
 
+    const player2Input: HTMLInputElement | null = player2Dom.getChildByName(
+      "nameField",
+    ) as HTMLInputElement | null;
+    this.add.image(800, 200, "character1");
+
     this.selectedMapBorder = this.add
-      .rectangle(200, 350, 200, 200)
+      .rectangle(175, mapSelectorPostionY, 300, 200)
       .setStrokeStyle(4, 0);
 
     this.add
-      .image(200, 350, "kpsBackground")
-      .setDisplaySize(200, 200)
+      .image(175, mapSelectorPostionY, "kpsBackground")
+      .setDisplaySize(300, 200)
       .setInteractive()
       .on("pointerdown", () => {
         this.selectedMap = 0;
@@ -49,8 +57,8 @@ export class CharacterSelection extends Scene {
       });
 
     this.add
-      .image(500, 350, "kpsBackground2")
-      .setDisplaySize(200, 200)
+      .image(500, mapSelectorPostionY, "kpsBackground2")
+      .setDisplaySize(300, 200)
       .setInteractive()
       .on("pointerdown", () => {
         this.selectedMap = 1;
@@ -58,17 +66,13 @@ export class CharacterSelection extends Scene {
       });
 
     this.add
-      .image(800, 350, "kpsBackground3")
-      .setDisplaySize(200, 200)
+      .image(825, mapSelectorPostionY, "kpsBackground3")
+      .setDisplaySize(300, 200)
       .setInteractive()
       .on("pointerdown", () => {
         this.selectedMap = 2;
         this.setSelectedMapBorder();
       });
-
-    const player2Input: HTMLInputElement | null = player2Dom.getChildByName(
-      "nameField",
-    ) as HTMLInputElement | null;
 
     this.add
       .text(150, 600, "BACK", {
@@ -121,13 +125,13 @@ export class CharacterSelection extends Scene {
   private setSelectedMapBorder() {
     switch (this.selectedMap) {
       case 0:
-        this.selectedMapBorder.setPosition(200, 350);
+        this.selectedMapBorder.setPosition(175, mapSelectorPostionY);
         break;
       case 1:
-        this.selectedMapBorder.setPosition(500, 350);
+        this.selectedMapBorder.setPosition(500, mapSelectorPostionY);
         break;
       case 2:
-        this.selectedMapBorder.setPosition(800, 350);
+        this.selectedMapBorder.setPosition(825, mapSelectorPostionY);
         break;
     }
   }
