@@ -1,5 +1,6 @@
 import { Item } from "./Item.ts";
 import Character from "../models/character/Character.ts";
+import configuration from "../configuration.json";
 
 export class KpsToken extends Item {
   public constructor() {
@@ -12,21 +13,23 @@ export class KpsToken extends Item {
     const originalAtk = player.stats.attackDamage;
     player.setStats({
       ...player.stats,
-      speed: originalSpeed + 400,
-      attackDamage: originalAtk + 20,
+      speed: originalSpeed + configuration["kps"]["speedBoost"],
+      attackDamage: originalAtk + configuration["kps"]["atkBoost"],
     });
-    player.scene.time.delayedCall(10000, () => {
+    player.scene.time.delayedCall(configuration["kps"]["delay"], () => {
       const modifiedSpeed = player.stats.speed;
       const modifiedAtk = player.stats.attackDamage;
-      player.setStats({
-        ...player.stats,
-        speed: modifiedSpeed - 300,
-        attackDamage: modifiedAtk - 20,
-      });
+      if (player.stats.speed > configuration["player"]["maxSpeed"]) {
+        player.setStats({
+          ...player.stats,
+          speed: modifiedSpeed - configuration["coffee"]["speedBoost"],
+          attackDamage: modifiedAtk - configuration["kps"]["atkBoost"],
+        });
+      }
     });
-    player.setHealth((player.health += 80));
-    if (player.health > 100) {
-      player.setHealth(100);
+    player.setHealth((player.health += configuration["kps"]["heal"]));
+    if (player.health > configuration["player"]["maxHealth"]) {
+      player.setHealth(configuration["player"]["maxHealth"]);
     }
     player.updateHealthBar();
   }
