@@ -12,7 +12,6 @@ https://hackathon2024spain.pages.dev/
 - [esbuild 0.21.2](https://github.com/evanw/esbuild)
 - [TypeScript 5.4.5](https://github.com/microsoft/TypeScript)
 
-
 ## Requirements
 
 [Node.js](https://nodejs.org) is required to install dependencies and run scripts via `npm`.

@@ -81,29 +81,29 @@ export class MainMenu extends Scene {
     });
 
     const player1Controls: ControlsDisplay = {
-      jump: "↑",
       left: "←",
       right: "→",
-      attack: "o",
+      jump: "↑",
       doubleJump: "↑ ↑",
+      attack: "O",
       dash: "P",
     };
 
     this.displayControls(player1Controls, sideDistance);
 
     const player2Controls: ControlsDisplay = {
-      jump: "W",
       left: "A",
       right: "D",
-      attack: "C",
+      jump: "W",
       doubleJump: "W W",
+      attack: "C",
       dash: "V",
     };
 
     this.displayControls(player2Controls, sideDistance + 300);
 
     this.add
-      .text(width - sideDistance - 200, 175, "ITEMS", {
+      .text(width - sideDistance - 120, 175, "ITEMS", {
         fontFamily: "main-font",
         fontSize: 26,
         color: "#ffffff",
@@ -114,19 +114,23 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
 
     const items: Array<ItemsDisplay> = [
+      { icon: "snack", description: "Restores hp" },
       { icon: "coffee", description: "Speed up" },
-      { icon: "kpsToken", description: "Power up" },
-      { icon: "snack", description: "Gives hp" },
       { icon: "beer", description: "Gives strength" },
+      { icon: "kpsToken", description: "Power up" },
     ];
 
     let initialItemsY: number = 300;
 
     items.forEach(({ icon, description }) => {
       this.add
-        .image(width - sideDistance - 300, initialItemsY, icon)
+        .image(width - sideDistance - 230, initialItemsY, icon)
         .setDisplaySize(30, 30);
-      this.printText(width - sideDistance - 200, initialItemsY, description);
+      this.printText(
+        width - sideDistance - 200,
+        initialItemsY - 10,
+        description,
+      );
 
       initialItemsY += 50;
     });
