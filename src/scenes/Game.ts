@@ -72,26 +72,35 @@ export class Game extends Scene {
   }
 
   private addItems() {
-    const randomNumber = Math.floor(Math.random() * (15 - 5 + 1)) + 5;
+    const random = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
+    const specialRandom = Math.floor(Math.random() * (20 - 10 + 1)) + 10;
     this.time.addEvent({
-      delay: randomNumber * 1000,
-      callback: () => this.emitRandomItem(),
+      delay: random * 1000,
+      callback: () => this.emitRandomItem(false),
+      callbackScope: this,
+      loop: true,
+    });
+    this.time.addEvent({
+      delay: specialRandom * 1000,
+      callback: () => this.emitRandomItem(true),
       callbackScope: this,
       loop: true,
     });
   }
 
-  private emitRandomItem() {
+  private emitRandomItem(isTokenGenerator: boolean) {
     let randomItem: Item;
-    const randomNumber = Math.floor(Math.random() * 100) + 1;
-    if (randomNumber < 10) {
+    if (isTokenGenerator) {
       randomItem = new KpsToken();
-    } else if (randomNumber < 30) {
-      randomItem = new Beer();
-    } else if (randomNumber < 60) {
-      randomItem = new Snack();
     } else {
-      randomItem = new Coffee();
+      const randomNumber = Math.floor(Math.random() * 100) + 1;
+      if (randomNumber < 25) {
+        randomItem = new Beer();
+      } else if (randomNumber < 60) {
+        randomItem = new Snack();
+      } else {
+        randomItem = new Coffee();
+      }
     }
 
     randomItem.emitItem(this.physics, this.platforms, this.player1);
