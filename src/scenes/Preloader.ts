@@ -56,7 +56,6 @@ export class Preloader extends Scene {
       frameHeight: 128,
     });
 
-
     this.load.spritesheet("player0_attack", "characters/blue/Attack.png", {
       frameWidth: 128,
       frameHeight: 128,
