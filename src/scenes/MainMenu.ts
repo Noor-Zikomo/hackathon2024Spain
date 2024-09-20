@@ -4,6 +4,7 @@ type ControlsDisplay = {
   jump: string;
   left: string;
   right: string;
+  attack: string;
 };
 
 type ItemsDisplay = {
@@ -58,17 +59,21 @@ export class MainMenu extends Scene {
       .setOrigin(0.5);
 
     const player1Controls: ControlsDisplay = {
-      jump: "W",
-      left: "A",
-      right: "D",
-    };
-    this.displayControls(player1Controls, sideDistance);
-
-    const player2Controls: ControlsDisplay = {
       jump: "↑",
       left: "←",
       right: "→",
+      attack: "↵",
     };
+
+    this.displayControls(player1Controls, sideDistance);
+
+    const player2Controls: ControlsDisplay = {
+      jump: "W",
+      left: "A",
+      right: "D",
+      attack: "R",
+    };
+
     this.displayControls(player2Controls, sideDistance + 200);
 
     this.add
