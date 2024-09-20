@@ -57,6 +57,14 @@ export class Preloader extends Scene {
     });
 
 
+    this.load.spritesheet("player0_attack", "characters/blue/Attack.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("player1_attack", "characters/red/Attack.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
     this.load.image("background", "sky.png");
     this.load.css("fontStyles", "fonts/fonts.css");
     this.load.image("star", "/items/star.png");

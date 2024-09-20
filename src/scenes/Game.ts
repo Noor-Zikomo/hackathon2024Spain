@@ -105,7 +105,12 @@ export class Game extends Scene {
       }
     }
 
-    randomItem.emitItem(this.physics, this.platforms, this.player1);
+    randomItem.emitItem(
+      this.physics,
+      this.platforms,
+      this.player1,
+      this.player2,
+    );
   }
 
   private createPlayers({ player1Name, player2Name }: PlayerData) {
@@ -120,7 +125,7 @@ export class Game extends Scene {
     this.player2 = new Character(
       PlayerID.Player2,
       player2Name,
-      this.physics.add.sprite(90, 450, "player1"),
+      this.physics.add.sprite(900, 450, "player1"),
       {},
       this,
     );

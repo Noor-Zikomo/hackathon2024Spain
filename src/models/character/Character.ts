@@ -130,8 +130,8 @@ export default class Character {
       } else if (this.keys.right.isDown && !this.isDashing) {
         this.moveRight();
         this.playerSprite.flipX = false;
-        this.lastFlipX = false;
-        this.playerSprite.anims.play(`${playerId}-right`, true);
+
+        this.playerSprite.anims.play(`${playerId}-right`, true);this.lastFlipX = false;
       } else if (this.knockBack) {
         this.handleKnockBack(this.knockBack);
         this.playerSprite.anims.play(`${playerId}-right`, true);
@@ -169,7 +169,8 @@ export default class Character {
 
       if (this.keys.attack.isDown && this.canAttack) {
         this.performAttack();
-      }
+      this.playerSprite.anims.play(`${playerId}-attack`, true);
+    }
 
       this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
       this.attackHitBox.y = this.playerSprite.y;
@@ -380,6 +381,19 @@ export default class Character {
       }),
       frameRate: 4,
       repeat: 0,
+    });
+
+    this.scene.anims.create({
+      key: `${playerId}-attack`,
+      frames: this.scene.anims.generateFrameNumbers(
+        `player${playerId}_attack`,
+        {
+          start: 0,
+          end: 3,
+        },
+      ),
+      frameRate: 10,
+      repeat: -1,
     });
   }
 }
