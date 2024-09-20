@@ -93,6 +93,8 @@ export default class Character {
     this.playerSprite.setBounce(BOUNCE);
     this.playerSprite.setCollideWorldBounds(true);
     this.playerSprite.setGravityY(PLAYER_WEIGHT);
+    this.playerSprite.setSize(45, 80);
+    this.playerSprite.setOffset(35, 50);
 
     this.scene = scene;
     this.createAnimations();
@@ -103,8 +105,11 @@ export default class Character {
       this.playerSprite.y,
       "",
     );
+    this.attackHitBox.setBounce(0);
     this.attackHitBox.setVisible(false);
     this.attackHitBox.setCollideWorldBounds(true);
+    // @ts-ignore
+    this.attackHitBox.body!.allowGravity! = false;
   }
 
   public update(): void {
@@ -167,7 +172,7 @@ export default class Character {
       this.performAttack();
     }
 
-    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -30 : 30);
+    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
     this.attackHitBox.y = this.playerSprite.y;
   }
 
@@ -221,6 +226,7 @@ export default class Character {
 
   public attack(enemy: Character): void {
     if (this.isAttacking && enemy.health > 0 && this.canAttack) {
+      this.scene.sound.add("attack", { volume: 2 }).play();
       this.canAttack = false;
       enemy.setHealth(enemy.health - 10);
       enemy.updateHealthBar();
