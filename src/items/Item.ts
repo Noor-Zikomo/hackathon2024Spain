@@ -12,8 +12,9 @@ export class Item {
 
   public emitItem(
     physics: ArcadePhysics,
-    platform: ArcadeColliderType,
+    platforms: ArcadeColliderType,
     player: Character,
+    scene: Phaser.Scene,
   ): void {
     const x = Phaser.Math.Between(25, 775);
     const y = 26;
@@ -21,17 +22,17 @@ export class Item {
     this.item.setDisplaySize(30, 30);
     this.item.setVelocity(0, 1);
     this.item.setInteractive();
-    physics.add.collider(this.item, platform);
-    physics.add.overlap(
+    physics.add.collider(this.item, platforms);
+    physics.add.collider(
       this.item,
       player.playerSprite,
-      () => this.onCollision,
+      () => this.onCollision(this.item, player),
       undefined,
-      player.scene,
+      scene,
     );
   }
 
-  private onCollision() {
-    this.item.disableBody(true, true);
+  protected onCollision(item: Phaser.Physics.Arcade.Image, _player: Character) {
+    item.disableBody(true, true);
   }
 }
