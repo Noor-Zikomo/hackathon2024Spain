@@ -105,10 +105,12 @@ export default class Character {
     if (this.keys.left.isDown) {
       this.moveLeft();
       this.lastFlipX = true;
+      this.playerSprite.flipX = true;
       this.playerSprite.anims.play("left", true);
       this.playerSprite.anims.play(`${playerId}-left`, true);
     } else if (this.keys.right.isDown) {
       this.moveRight();
+      this.playerSprite.flipX = false;
       this.lastFlipX = false;
       this.playerSprite.anims.play("right", true);
     } else if (this.knockBack) {
@@ -215,7 +217,7 @@ export default class Character {
       down: Phaser.Input.Keyboard.KeyCodes.DOWN,
       left: Phaser.Input.Keyboard.KeyCodes.LEFT,
       right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
-      attack: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      attack: Phaser.Input.Keyboard.KeyCodes.ENTER,
     }) as Keys;
     const player2Keys: Keys = inputKeyword.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -237,7 +239,7 @@ export default class Character {
         coordinates.posY,
         name,
         {
-          fontFamily: "Arial Black",
+          fontFamily: "main-font",
           fontSize: 25,
           color: "#ffffff",
           stroke: "#000000",

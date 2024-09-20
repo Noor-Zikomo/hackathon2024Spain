@@ -2,8 +2,8 @@ import { GameObjects, Scene } from "phaser";
 import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
 import { Music } from "./MainMenu.ts";
 
-const input1: string = `<input type="text" name="nameField" placeholder="Player 1 Name" style="font-size: 20px" />`;
-const input2: string = `<input type="text" name="nameField" placeholder="Player 2 Name" style="font-size: 20px" />`;
+const input1: string = `<input type="text" name="nameField" placeholder="Player 1" value="Player 1" style="font-size: 20px" />`;
+const input2: string = `<input type="text" name="nameField" placeholder="Player 2" value="Player 2" style="font-size: 20px" />`;
 
 type Data = { music: Music };
 
