@@ -18,7 +18,7 @@ export class GameOver extends Scene {
       .setDisplaySize(1024, 768);
 
     const winnerMusic = this.sound.add("backgroundMusicWinner", {
-      volume: 0.5,
+      volume: 0.2,
     });
     winnerMusic.play();
 

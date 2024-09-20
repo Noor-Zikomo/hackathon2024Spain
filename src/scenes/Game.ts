@@ -32,7 +32,7 @@ export class Game extends Scene {
     this.createPlayers(playerData);
     this.setupHealthBars();
     this.backgroundMusic = this.sound.add("backgroundMusicFight", {
-      volume: 0.5,
+      volume: 0.2,
       loop: true,
     });
     this.backgroundMusic.play();
