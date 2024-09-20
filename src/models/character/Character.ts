@@ -227,7 +227,7 @@ export default class Character {
 
   public attack(enemy: Character): void {
     if (this.isAttacking && enemy.health > 0 && this.canAttack) {
-      this.scene.sound.add("attack", { volume: 2 }).play();
+      this.scene.sound.add("attack", { volume: 1 }).play();
       this.canAttack = false;
       enemy.setHealth(enemy.health - 10);
       enemy.updateHealthBar();
@@ -272,7 +272,7 @@ export default class Character {
       throw new Error("No keyboard plugin found in scene");
     }
 
-    const player1Keys: Keys = inputKeyword.addKeys({
+    const player2Keys: Keys = inputKeyword.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.UP,
       down: Phaser.Input.Keyboard.KeyCodes.DOWN,
       left: Phaser.Input.Keyboard.KeyCodes.LEFT,
@@ -280,7 +280,7 @@ export default class Character {
       attack: Phaser.Input.Keyboard.KeyCodes.O,
       dash: Phaser.Input.Keyboard.KeyCodes.P,
     }) as Keys;
-    const player2Keys: Keys = inputKeyword.addKeys({
+    const player1Keys: Keys = inputKeyword.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
       down: Phaser.Input.Keyboard.KeyCodes.S,
       left: Phaser.Input.Keyboard.KeyCodes.A,

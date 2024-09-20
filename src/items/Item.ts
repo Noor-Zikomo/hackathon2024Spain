@@ -28,7 +28,7 @@ export class Item {
   }
 
   protected onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
-    const powerUpSound = player.scene.sound.add("powerUp", { volume: 2 });
+    const powerUpSound = player.scene.sound.add("powerUp", { volume: 1 });
     powerUpSound.play();
     item.disableBody(true, true);
   }

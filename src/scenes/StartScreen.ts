@@ -15,7 +15,7 @@ export class StartScreen extends Scene {
   create() {
     this.background = this.add.image(512, 384, "main");
     const backgroundMusic: Music = this.sound.add("backgroundMusicMenu", {
-      volume: 0.5,
+      volume: 0.2,
       loop: true,
     });
     backgroundMusic.play();
