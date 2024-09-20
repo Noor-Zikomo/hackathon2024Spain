@@ -5,6 +5,7 @@ import { Music } from "./MainMenu.ts";
 const input1: string = `<input type="text" name="nameField" placeholder="Player 1" value="Player 1" style="font-size: 20px" />`;
 const input2: string = `<input type="text" name="nameField" placeholder="Player 2" value="Player 2" style="font-size: 20px" />`;
 const mapSelectorPositionY: number = 450;
+const countryNamePosition: number = 300;
 
 type Data = { music: Music };
 
@@ -26,7 +27,8 @@ export class CharacterSelection extends Scene {
 
   create({ music }: Data) {
     this.music = music;
-    this.background = this.add.image(512, 384, "background");
+    this.background = this.add.image(512, 384, "main");
+    this.add.rectangle(512, 400, 1024, 900).setFillStyle(0, 100);
 
     const player1Dom = this.add.dom(200, 100).createFromHTML(input1);
 
@@ -47,6 +49,15 @@ export class CharacterSelection extends Scene {
       .rectangle(175, mapSelectorPositionY, 300, 200)
       .setStrokeStyle(4, 0);
 
+    this.add.text(150, countryNamePosition, "UK", {
+      fontFamily: "main-font",
+      fontSize: 26,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
+
     this.add
       .image(175, mapSelectorPositionY, "kpsBackground")
       .setDisplaySize(300, 200)
@@ -56,6 +67,15 @@ export class CharacterSelection extends Scene {
         this.setSelectedMapBorder();
       });
 
+    this.add.text(410, countryNamePosition, "GERMANY", {
+      fontFamily: "main-font",
+      fontSize: 26,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
+
     this.add
       .image(500, mapSelectorPositionY, "kpsBackground2")
       .setDisplaySize(300, 200)
@@ -64,6 +84,15 @@ export class CharacterSelection extends Scene {
         this.selectedMap = 1;
         this.setSelectedMapBorder();
       });
+
+    this.add.text(760, countryNamePosition, "SPAIN", {
+      fontFamily: "main-font",
+      fontSize: 26,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
 
     this.add
       .image(825, mapSelectorPositionY, "kpsBackground3")
@@ -85,7 +114,10 @@ export class CharacterSelection extends Scene {
       })
       .setOrigin(0.5)
       .setInteractive()
-      .on("pointerdown", () => this.scene.start("MainMenu"));
+      .on("pointerdown", () => {
+        this.music.destroy();
+        this.scene.start("MainMenu");
+      });
 
     this.add
       .text(850, 600, "START", {

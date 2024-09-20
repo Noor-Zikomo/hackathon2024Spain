@@ -72,11 +72,13 @@ export class Preloader extends Scene {
     this.load.image("kpsToken", "/items/kps.png");
     this.load.image("snack", "food/43.png");
     this.load.image("beer", "food/6.png");
-    this.load.image("character1", "characters/blue/characterSelection.png");
-    this.load.image("character2", "characters/red/characterSelection.png");
+    this.load.image("character1", "characters/blue/selection.png");
+    this.load.image("character2", "characters/red/selection.png");
     this.load.image("kpsBackground", "backgrounds/kpsBackground.jpg");
     this.load.image("kpsBackground2", "backgrounds/kpsBackground2.jpg");
     this.load.image("kpsBackground3", "backgrounds/kpsBackground3.jpg");
+    this.load.image("main", "backgrounds/main.png");
+    this.load.image("gameOver", "backgrounds/gameOver.png");
   }
 
   public create() {
