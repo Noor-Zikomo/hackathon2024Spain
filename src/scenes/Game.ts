@@ -45,7 +45,7 @@ export class Game extends Scene {
     const isDeadPlayer2 = this.player2.health <= 0;
 
     if (isDeadPlayer1 || isDeadPlayer2) {
-      this.time.delayedCall(3500, () => {
+      this.time.delayedCall(2000, () => {
         const winnerName: string = isDeadPlayer1
           ? this.player2.nameBar.text
           : this.player1.nameBar.text;
