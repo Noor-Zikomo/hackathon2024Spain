@@ -46,7 +46,7 @@ playerNameCoordinates.set(PlayerID.Player2, { posX: 780, posY: 10 });
 
 export default class Character {
   private readonly id: PlayerID;
-  private keys: any;
+  private keys: Keys;
   public nameBar: Phaser.GameObjects.Text;
   public healthBar: Phaser.GameObjects.Graphics;
   public health: number = MAX_HEALTH;
@@ -74,10 +74,10 @@ export default class Character {
   }
 
   public update(): void {
-    if (this.keys?.left?.isDown) {
+    if (this.keys.left.isDown) {
       this.moveLeft();
       this.playerSprite.anims.play("left", true);
-    } else if (this.keys?.right?.isDown) {
+    } else if (this.keys.right.isDown) {
       this.moveRight();
       this.playerSprite.anims.play("right", true);
     } else {
@@ -85,20 +85,33 @@ export default class Character {
       this.playerSprite.anims.play("turn");
     }
 
-    if (this.keys?.up?.isDown) {
+    if (this.keys.up.isDown) {
       this.jump();
     }
 
-    // this.isAttacking = this.keys.space.isDown;
+    if (this.keys.attack.isDown) {
+      this.performAttack();
+    }
+
+    if (this.isAttacking) {
+      this.playerSprite.setTint(0xff0000);
+    } else {
+      this.playerSprite.clearTint();
+    }
+  }
+
+  private performAttack() {
+    this.isAttacking = true;
+    setTimeout(() => {
+      this.isAttacking = false;
+    }, 300);
   }
 
   public attack(enemy: Character): void {
-    if (this.isAttacking) {
-      const newEnemyHealth = (enemy.health -= 10);
-      enemy.setHealth(newEnemyHealth);
-      if (newEnemyHealth <= 0) {
-        // TODO Finish game
-      }
+    if (this.isAttacking && enemy.health > 0) {
+      enemy.setHealth(enemy.health - 10);
+      enemy.updateHealthBar();
+      console.log("¡Enemigo golpeado!");
     }
   }
 
@@ -116,8 +129,9 @@ export default class Character {
       const { posX, posY }: Coordinates = coordinates;
       this.healthBar.strokeRect(posX, posY, 200, 20);
       const newHealth: number = this.health / MAX_HEALTH;
-      this.updateHealthBarColor(newHealth);
-      this.healthBar.fillRect(posX, posY, newHealth * 200, 20);
+      const currentHealth: number = newHealth > 0 ? newHealth : 0;
+      this.updateHealthBarColor(currentHealth);
+      this.healthBar.fillRect(posX, posY, currentHealth * 200, 20);
     }
   }
 

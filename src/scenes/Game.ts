@@ -10,6 +10,10 @@ import Character, { PlayerID } from "../models/character/Character.ts";
 export class Game extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
+  backgroundMusic:
+    | Phaser.Sound.NoAudioSound
+    | Phaser.Sound.HTML5AudioSound
+    | Phaser.Sound.WebAudioSound;
   platforms: Phaser.Physics.Arcade.StaticGroup;
   mapData: MapConfig;
   player1: Character;
@@ -27,40 +31,26 @@ export class Game extends Scene {
     this.addItems();
     this.createPlayers(playerData);
     this.setupHealthBars();
-
-    const backgroundMusic = this.sound.add("backgroundMusicFight", {
+    this.backgroundMusic = this.sound.add("backgroundMusicFight", {
       volume: 0.5,
       loop: true,
     });
-    backgroundMusic.play();
-
-    this.add
-      .text(800, 600, "END", {
-        fontFamily: "Arial Black",
-        fontSize: 38,
-        color: "#ffffff",
-        stroke: "#000000",
-        strokeThickness: 8,
-        align: "center",
-      })
-      .setOrigin(0.5)
-      .setInteractive()
-      .on("pointerdown", () => {
-        backgroundMusic.destroy();
-        this.scene.start("GameOver", { winner: playerData.player2Name });
-      });
-
-    this.time.addEvent({
-      delay: 1000,
-      callback: () => this.reduceHealth(this.player1),
-      callbackScope: this,
-      loop: true,
-    });
+    this.backgroundMusic.play();
   }
 
   public update() {
     this.player1.update();
     this.player2.update();
+    const isDeadPlayer1 = this.player1.health <= 0;
+    const isDeadPlayer2 = this.player2.health <= 0;
+
+    if (isDeadPlayer1 || isDeadPlayer2) {
+      const winnerName: string = isDeadPlayer1
+        ? this.player2.nameBar.text
+        : this.player1.nameBar.text;
+      this.backgroundMusic.destroy();
+      this.scene.start("GameOver", { winner: winnerName });
+    }
   }
 
   private handleMap() {
@@ -124,21 +114,30 @@ export class Game extends Scene {
       this,
     );
 
-    this.physics.add.collider(
-      this.player1.playerSprite,
-      this.player2.playerSprite,
+    const playerSprite1 = this.player1.playerSprite;
+    const playerSprite2 = this.player2.playerSprite;
+
+    this.physics.add.collider(playerSprite1, playerSprite2);
+
+    this.physics.add.overlap(
+      playerSprite1,
+      playerSprite2,
+      () => this.player1.attack(this.player2),
+      undefined,
+      this,
+    );
+
+    this.physics.add.overlap(
+      playerSprite2,
+      playerSprite1,
+      () => this.player2.attack(this.player1),
+      undefined,
+      this,
     );
   }
 
   private setupHealthBars() {
     this.player1.updateHealthBar();
     this.player2.updateHealthBar();
-  }
-
-  private reduceHealth(player: Character) {
-    if (player.health > 0) {
-      player.setHealth((player.health -= 10));
-      player.updateHealthBar();
-    }
   }
 }
