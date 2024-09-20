@@ -103,7 +103,12 @@ export class Game extends Scene {
       }
     }
 
-    randomItem.emitItem(this.physics, this.platforms, this.player1);
+    randomItem.emitItem(
+      this.physics,
+      this.platforms,
+      this.player1,
+      this.player2,
+    );
   }
 
   private createPlayers({ player1Name, player2Name }: PlayerData) {
