@@ -57,7 +57,7 @@ export default class Character {
   public stats: CharacterStats;
   public playerSprite: Phaser.Physics.Arcade.Sprite;
   public isAttacking: boolean;
-  private scene: Phaser.Scene;
+  public scene: Phaser.Scene;
   private isJumping: boolean = false;
   private canDoubleJump: boolean = false;
   private jumpCooldown: boolean = false;
