@@ -68,7 +68,7 @@ export default class Character {
   public canAttack = true;
   public attackHitBox: Phaser.Physics.Arcade.Sprite;
   public lastFlipX: boolean;
-  private scene: Phaser.Scene;
+  public scene: Phaser.Scene;
   private isJumping: boolean = false;
   private canDoubleJump: boolean = false;
   private jumpCooldown: boolean = false;
