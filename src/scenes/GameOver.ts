@@ -1,5 +1,9 @@
 import { Scene } from "phaser";
 
+type Data = {
+  winner: string;
+};
+
 export class GameOver extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
@@ -9,14 +13,14 @@ export class GameOver extends Scene {
     super("GameOver");
   }
 
-  create() {
+  create({ winner }: Data) {
     this.camera = this.cameras.main;
     this.camera.setBackgroundColor(0xff0000);
 
     this.background = this.add.image(512, 384, "background");
     this.background.setAlpha(0.5);
 
-    this.gameover_text = this.add.text(512, 384, "Game Over", {
+    this.gameover_text = this.add.text(512, 384, winner + " wins", {
       fontFamily: "main-font",
       fontSize: 64,
       color: "#ffffff",

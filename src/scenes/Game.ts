@@ -47,7 +47,7 @@ export class Game extends Scene {
       .setInteractive()
       .on("pointerdown", () => {
         backgroundMusic.destroy();
-        this.scene.start("GameOver");
+        this.scene.start("GameOver", { winner: playerData.player2Name });
       });
 
     this.time.addEvent({
