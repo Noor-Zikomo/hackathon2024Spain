@@ -147,7 +147,7 @@ export default class Character {
       down: Phaser.Input.Keyboard.KeyCodes.DOWN,
       left: Phaser.Input.Keyboard.KeyCodes.LEFT,
       right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
-      attack: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      attack: Phaser.Input.Keyboard.KeyCodes.ENTER,
     }) as Keys;
     const player2Keys: Keys = inputKeyword.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -169,7 +169,7 @@ export default class Character {
         coordinates.posY,
         name,
         {
-          fontFamily: "Arial Black",
+          fontFamily: "main-font",
           fontSize: 25,
           color: "#ffffff",
           stroke: "#000000",
