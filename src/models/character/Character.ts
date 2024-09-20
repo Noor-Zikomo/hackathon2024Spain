@@ -16,6 +16,7 @@ export interface Keys {
   left: Phaser.Input.Keyboard.Key;
   right: Phaser.Input.Keyboard.Key;
   attack: Phaser.Input.Keyboard.Key;
+  dash: Phaser.Input.Keyboard.Key;
 }
 
 export interface CharacterStats {
@@ -28,11 +29,15 @@ export const yellow = 0xffff00;
 export const red = 0xff0000;
 export const white = 0xffffff;
 export const MAX_HEALTH: number = 100;
-const DOUBLE_JUMP_COOLDOWN: number = 500;
+const DOUBLE_JUMP_COOLDOWN: number = 200;
 const JUMP_VELOCITY: number = -400;
 const DOUBLE_JUMP_VELOCITY: number = -400;
 const PLAYER_WEIGHT: number = 600;
 const BOUNCE: number = 0.2;
+const DASH_VELOCITY: number = 600;
+const DASH_DURATION: number = 200;
+const DASH_COOLDOWN: number = 1000;
+const JUMP_BREAKER_VELOCITY: number = 400;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
@@ -61,6 +66,8 @@ export default class Character {
   private isJumping: boolean = false;
   private canDoubleJump: boolean = false;
   private jumpCooldown: boolean = false;
+  private isDashing: boolean = false;
+  private canDash: boolean = true;
 
   constructor(
     id: number,
@@ -83,15 +90,35 @@ export default class Character {
   }
 
   public update(): void {
-    if (this.keys.left.isDown) {
+    if (this.keys.left.isDown && !this.isDashing) {
       this.moveLeft();
       this.playerSprite.anims.play("left", true);
-    } else if (this.keys.right.isDown) {
+    } else if (this.keys.right.isDown && !this.isDashing) {
       this.moveRight();
       this.playerSprite.anims.play("right", true);
-    } else {
+    } else if (!this.isDashing) {
       this.playerSprite.setVelocityX(0);
       this.playerSprite.anims.play("turn");
+    }
+
+    if (
+      this.keys.dash.isDown &&
+      (this.keys.left.isDown || this.keys.right.isDown) &&
+      !this.isDashing
+    ) {
+      if (this.keys.left.isDown) {
+        this.performDash("left");
+      } else if (this.keys.right.isDown) {
+        this.performDash("right");
+      }
+    }
+
+    if (
+      this.keys.down.isDown &&
+      !this.playerSprite.body?.blocked.down &&
+      this.isJumping
+    ) {
+      this.performJumpBreaker();
     }
 
     if (this.keys.up.isDown && !this.jumpCooldown) {
@@ -99,9 +126,7 @@ export default class Character {
         this.performJump(JUMP_VELOCITY);
         this.isJumping = true;
         this.canDoubleJump = true;
-      }
-
-      else if (this.isJumping && this.canDoubleJump) {
+      } else if (this.isJumping && this.canDoubleJump) {
         this.performJump(DOUBLE_JUMP_VELOCITY);
         this.canDoubleJump = false;
       }
@@ -122,7 +147,6 @@ export default class Character {
     }
   }
 
-
   private performJump(velocityY: number): void {
     this.playerSprite.setVelocityY(velocityY);
     this.jumpCooldown = true;
@@ -132,13 +156,37 @@ export default class Character {
     });
   }
 
+  private performJumpBreaker(): void {
+    if (this.isJumping) {
+      this.playerSprite.setVelocityY(JUMP_BREAKER_VELOCITY);
+    } else {
+      this.playerSprite.setVelocityY(0);
+    }
+  }
+
   private resetJumpFlags(): void {
     this.isJumping = false;
     this.canDoubleJump = false;
     this.jumpCooldown = false;
   }
 
+  private performDash(direction: "left" | "right"): void {
+    if (!this.canDash) return;
 
+    this.isDashing = true;
+    this.canDash = false;
+
+    const dashVelocity = direction === "left" ? -DASH_VELOCITY : DASH_VELOCITY;
+    this.playerSprite.setVelocityX(dashVelocity);
+
+    this.scene.time.delayedCall(DASH_DURATION, () => {
+      this.isDashing = false;
+    });
+
+    this.scene.time.delayedCall(DASH_COOLDOWN, () => {
+      this.canDash = true;
+    });
+  }
 
   private performAttack() {
     this.isAttacking = true;
@@ -188,6 +236,7 @@ export default class Character {
       left: Phaser.Input.Keyboard.KeyCodes.LEFT,
       right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
       attack: Phaser.Input.Keyboard.KeyCodes.SPACE,
+      dash: Phaser.Input.Keyboard.KeyCodes.M,
     }) as Keys;
     const player2Keys: Keys = inputKeyword.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
@@ -195,6 +244,7 @@ export default class Character {
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D,
       attack: Phaser.Input.Keyboard.KeyCodes.R,
+      dash: Phaser.Input.Keyboard.KeyCodes.C,
     }) as Keys;
 
     return this.id === PlayerID.Player1 ? player1Keys : player2Keys;
