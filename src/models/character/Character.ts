@@ -391,7 +391,7 @@ export default class Character {
       frames: this.scene.anims.generateFrameNumbers(
         `player${playerId}_attack`,
         {
-          start: 0,
+          start: 2,
           end: 3,
         },
       ),
