@@ -15,16 +15,14 @@ export class Game extends Scene {
   player1: Character;
   player2: Character;
 
-  constructor() {
+  public constructor() {
     super("Game");
   }
 
-  create({ mapData, playerData }: GameConfig) {
+  public create({ mapData, playerData }: GameConfig) {
     this.mapData = mapData;
-
     this.handleMap();
     this.camera = this.cameras.main;
-
     this.camera.setBackgroundColor(0x00ff00);
     this.addItems();
     this.createPlayers(playerData);
@@ -121,9 +119,14 @@ export class Game extends Scene {
     this.player2 = new Character(
       PlayerID.Player2,
       player2Name,
-      this.physics.add.sprite(-100, 450, "dude"),
+      this.physics.add.sprite(90, 450, "dude"),
       {},
       this,
+    );
+
+    this.physics.add.collider(
+      this.player1.playerSprite,
+      this.player2.playerSprite,
     );
   }
 
@@ -133,8 +136,8 @@ export class Game extends Scene {
   }
 
   private reduceHealth(player: Character) {
-    if (player.stats.health > 0) {
-      player.setHealth((player.stats.health -= 10));
+    if (player.health > 0) {
+      player.setHealth((player.health -= 10));
       player.updateHealthBar();
     }
   }
