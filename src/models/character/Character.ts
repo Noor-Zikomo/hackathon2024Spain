@@ -275,16 +275,16 @@ export default class Character {
       down: Phaser.Input.Keyboard.KeyCodes.DOWN,
       left: Phaser.Input.Keyboard.KeyCodes.LEFT,
       right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
-      attack: Phaser.Input.Keyboard.KeyCodes.ENTER,
-      dash: Phaser.Input.Keyboard.KeyCodes.M,
+      attack: Phaser.Input.Keyboard.KeyCodes.O,
+      dash: Phaser.Input.Keyboard.KeyCodes.P,
     }) as Keys;
     const player2Keys: Keys = inputKeyword.addKeys({
       up: Phaser.Input.Keyboard.KeyCodes.W,
       down: Phaser.Input.Keyboard.KeyCodes.S,
       left: Phaser.Input.Keyboard.KeyCodes.A,
       right: Phaser.Input.Keyboard.KeyCodes.D,
-      attack: Phaser.Input.Keyboard.KeyCodes.R,
-      dash: Phaser.Input.Keyboard.KeyCodes.C,
+      attack: Phaser.Input.Keyboard.KeyCodes.C,
+      dash: Phaser.Input.Keyboard.KeyCodes.V,
     }) as Keys;
 
     return this.id === PlayerID.Player1 ? player1Keys : player2Keys;

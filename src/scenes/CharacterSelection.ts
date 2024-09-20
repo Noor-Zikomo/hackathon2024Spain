@@ -4,7 +4,7 @@ import { Music } from "./MainMenu.ts";
 
 const input1: string = `<input type="text" name="nameField" placeholder="Player 1" value="Player 1" style="font-size: 20px" />`;
 const input2: string = `<input type="text" name="nameField" placeholder="Player 2" value="Player 2" style="font-size: 20px" />`;
-const mapSelectorPostionY: number = 450;
+const mapSelectorPositionY: number = 450;
 
 type Data = { music: Music };
 
@@ -44,11 +44,11 @@ export class CharacterSelection extends Scene {
     this.add.image(800, 200, "character2");
 
     this.selectedMapBorder = this.add
-      .rectangle(175, mapSelectorPostionY, 300, 200)
+      .rectangle(175, mapSelectorPositionY, 300, 200)
       .setStrokeStyle(4, 0);
 
     this.add
-      .image(175, mapSelectorPostionY, "kpsBackground")
+      .image(175, mapSelectorPositionY, "kpsBackground")
       .setDisplaySize(300, 200)
       .setInteractive()
       .on("pointerdown", () => {
@@ -57,7 +57,7 @@ export class CharacterSelection extends Scene {
       });
 
     this.add
-      .image(500, mapSelectorPostionY, "kpsBackground2")
+      .image(500, mapSelectorPositionY, "kpsBackground2")
       .setDisplaySize(300, 200)
       .setInteractive()
       .on("pointerdown", () => {
@@ -66,7 +66,7 @@ export class CharacterSelection extends Scene {
       });
 
     this.add
-      .image(825, mapSelectorPostionY, "kpsBackground3")
+      .image(825, mapSelectorPositionY, "kpsBackground3")
       .setDisplaySize(300, 200)
       .setInteractive()
       .on("pointerdown", () => {
@@ -125,13 +125,13 @@ export class CharacterSelection extends Scene {
   private setSelectedMapBorder() {
     switch (this.selectedMap) {
       case 0:
-        this.selectedMapBorder.setPosition(175, mapSelectorPostionY);
+        this.selectedMapBorder.setPosition(175, mapSelectorPositionY);
         break;
       case 1:
-        this.selectedMapBorder.setPosition(500, mapSelectorPostionY);
+        this.selectedMapBorder.setPosition(500, mapSelectorPositionY);
         break;
       case 2:
-        this.selectedMapBorder.setPosition(825, mapSelectorPostionY);
+        this.selectedMapBorder.setPosition(825, mapSelectorPositionY);
         break;
     }
   }
