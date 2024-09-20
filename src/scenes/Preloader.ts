@@ -39,11 +39,11 @@ export class Preloader extends Scene {
       frameWidth: 128,
       frameHeight: 128,
     });
-    this.load.spritesheet("player0_idle", "characters/City_men_1/Idle.png", {
+    this.load.spritesheet("player0_idle", "characters/blue/Idle.png", {
       frameWidth: 128,
       frameHeight: 128,
     });
-    this.load.spritesheet("player1_idle", "characters/City_men_2/Idle.png", {
+    this.load.spritesheet("player1_idle", "characters/red/Idle.png", {
       frameWidth: 128,
       frameHeight: 128,
     });
