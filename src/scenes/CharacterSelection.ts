@@ -41,7 +41,7 @@ export class CharacterSelection extends Scene {
     const player2Input: HTMLInputElement | null = player2Dom.getChildByName(
       "nameField",
     ) as HTMLInputElement | null;
-    this.add.image(800, 200, "character1");
+    this.add.image(800, 200, "character2");
 
     this.selectedMapBorder = this.add
       .rectangle(175, mapSelectorPostionY, 300, 200)
