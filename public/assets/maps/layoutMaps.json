@@ -80,5 +80,40 @@
         "key": "platform"
       }
     ]
+  },
+  {
+    "id": "kpsBackground3",
+    "config": [
+      {
+        "x": 512,
+        "y": 700,
+        "scale": 1,
+        "key": "platform2"
+      },
+      {
+        "x": 512,
+        "y": 535,
+        "scale": 1,
+        "key": "platform3"
+      },
+      {
+        "x": 295,
+        "y": 450,
+        "scale": 1,
+        "key": "platform4"
+      },
+      {
+        "x": 700,
+        "y": 300,
+        "scale": 0.3,
+        "key": "platform5"
+      },
+      {
+        "x": 200,
+        "y": 200,
+        "scale": 0.3,
+        "key": "platform5"
+      }
+    ]
   }
 ]

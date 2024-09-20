@@ -12,7 +12,7 @@ export class MainMenu extends Scene {
   getRandomMap(): {} {
     const mapData: {}[] = mapDataJSON;
     const mapNumber: number = Math.floor(Math.random() * mapData.length);
-    return mapData[mapNumber];
+    return mapData[2];
   }
 
   create() {
