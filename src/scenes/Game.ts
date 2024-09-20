@@ -123,7 +123,7 @@ export class Game extends Scene {
     this.player2 = new Character(
       PlayerID.Player2,
       player2Name,
-      this.physics.add.sprite(90, 450, "player1"),
+      this.physics.add.sprite(900, 450, "player1"),
       {},
       this,
     );
