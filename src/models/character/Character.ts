@@ -229,7 +229,7 @@ export default class Character {
     if (this.isAttacking && enemy.health > 0 && this.canAttack) {
       this.scene.sound.add("attack", { volume: 1 }).play();
       this.canAttack = false;
-      enemy.setHealth(enemy.health - 10);
+      enemy.setHealth(enemy.health - this.stats.attackDamage);
       enemy.updateHealthBar();
       const enemySprite = enemy.playerSprite;
       enemySprite.setTint(0xff0000);
