@@ -28,7 +28,7 @@ export class StartScreen extends Scene {
         fontSize: 80,
         color: "#ffffff",
         stroke: "#000000",
-        strokeThickness: 8,
+        strokeThickness: 12,
         align: "center",
       })
       .setOrigin(1);
@@ -38,7 +38,7 @@ export class StartScreen extends Scene {
         fontSize: 80,
         color: "#00a6ff",
         stroke: "#000000",
-        strokeThickness: 8,
+        strokeThickness: 12,
         align: "center",
       })
       .setOrigin(-0.5);
@@ -57,5 +57,23 @@ export class StartScreen extends Scene {
       .on("pointerdown", () => {
         this.scene.start("MainMenu", { music: backgroundMusic });
       });
+
+    this.add.text(250, 700, "The fellowship of the skate", {
+      fontFamily: "main-font",
+      fontSize: 23,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 8,
+      align: "center",
+    });
+
+    this.add.text(820, 725, " © KPS Iberia", {
+      fontFamily: "main-font",
+      fontSize: 16,
+      color: "#ffffff",
+      stroke: "#000000",
+      strokeThickness: 12,
+      align: "center",
+    });
   }
 }
