@@ -278,7 +278,7 @@ export default class Character {
     }
   }
 
-  private setStats(stats: Partial<CharacterStats>): void {
+  public setStats(stats: Partial<CharacterStats>): void {
     this.stats = {
       speed: stats.speed ?? 200,
       attackDamage: stats.attackDamage ?? 10,
