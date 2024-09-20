@@ -1,4 +1,3 @@
-import CursorKeys = Phaser.Types.Input.Keyboard.CursorKeys;
 import KeyboardPlugin = Phaser.Input.Keyboard.KeyboardPlugin;
 
 export enum PlayerID {
@@ -6,21 +5,22 @@ export enum PlayerID {
   Player2,
 }
 
-export enum AtackType {
-  MELEE,
-  RANGED,
-}
-
 export interface Coordinates {
   posX: number;
   posY: number;
 }
 
+export interface Keys {
+  up: Phaser.Input.Keyboard.Key;
+  down: Phaser.Input.Keyboard.Key;
+  left: Phaser.Input.Keyboard.Key;
+  right: Phaser.Input.Keyboard.Key;
+  attack: Phaser.Input.Keyboard.Key;
+}
+
 export interface CharacterStats {
-  health: number;
   readonly speed: number;
   readonly attackDamage: number;
-  readonly attackType: AtackType;
   readonly doubleJump: boolean;
 }
 
@@ -28,6 +28,7 @@ export const green = 0x00ff00;
 export const yellow = 0xffff00;
 export const red = 0xff0000;
 export const white = 0xffffff;
+export const MAX_HEALTH: number = 100;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
@@ -44,14 +45,15 @@ playerNameCoordinates.set(PlayerID.Player1, { posX: 50, posY: 10 });
 playerNameCoordinates.set(PlayerID.Player2, { posX: 780, posY: 10 });
 
 export default class Character {
-  private readonly maxHealth: number = 100;
-  private cursors: CursorKeys;
-  private id: PlayerID;
+  private readonly id: PlayerID;
+  private keys: any;
   public nameBar: Phaser.GameObjects.Text;
   public healthBar: Phaser.GameObjects.Graphics;
+  public health: number = MAX_HEALTH;
   public stats: CharacterStats;
   public playerSprite: Phaser.Physics.Arcade.Sprite;
-  public scene: Phaser.Scene;
+  public isAttacking: boolean;
+  private scene: Phaser.Scene;
 
   constructor(
     id: number,
@@ -68,14 +70,14 @@ export default class Character {
     this.scene = scene;
     this.createAnimations();
     this.generateHealthBar(id, name);
-    this.cursors = this.generateCursorKeys();
+    this.keys = this.generateCursorKeys();
   }
 
   public update(): void {
-    if (this.cursors?.left?.isDown) {
+    if (this.keys?.left?.isDown) {
       this.moveLeft();
       this.playerSprite.anims.play("left", true);
-    } else if (this.cursors?.right?.isDown) {
+    } else if (this.keys?.right?.isDown) {
       this.moveRight();
       this.playerSprite.anims.play("right", true);
     } else {
@@ -83,9 +85,65 @@ export default class Character {
       this.playerSprite.anims.play("turn");
     }
 
-    if (this.cursors.up?.isDown) {
+    if (this.keys?.up?.isDown) {
       this.jump();
     }
+
+    // this.isAttacking = this.keys.space.isDown;
+  }
+
+  public attack(enemy: Character): void {
+    if (this.isAttacking) {
+      const newEnemyHealth = (enemy.health -= 10);
+      enemy.setHealth(newEnemyHealth);
+      if (newEnemyHealth <= 0) {
+        // TODO Finish game
+      }
+    }
+  }
+
+  public setHealth(newHealth: number) {
+    this.health = newHealth;
+  }
+
+  public updateHealthBar() {
+    this.healthBar.clear();
+    this.healthBar.lineStyle(4, white);
+    const coordinates: Coordinates | undefined = healthBarCoordinates.get(
+      this.id,
+    );
+    if (coordinates) {
+      const { posX, posY }: Coordinates = coordinates;
+      this.healthBar.strokeRect(posX, posY, 200, 20);
+      const newHealth: number = this.health / MAX_HEALTH;
+      this.updateHealthBarColor(newHealth);
+      this.healthBar.fillRect(posX, posY, newHealth * 200, 20);
+    }
+  }
+
+  private generateCursorKeys(): Keys {
+    let inputKeyword: KeyboardPlugin | null = this.scene.input.keyboard;
+
+    if (!inputKeyword) {
+      throw new Error("No keyboard plugin found in scene");
+    }
+
+    const player1Keys: Keys = inputKeyword.addKeys({
+      up: Phaser.Input.Keyboard.KeyCodes.UP,
+      down: Phaser.Input.Keyboard.KeyCodes.DOWN,
+      left: Phaser.Input.Keyboard.KeyCodes.LEFT,
+      right: Phaser.Input.Keyboard.KeyCodes.RIGHT,
+      attack: Phaser.Input.Keyboard.KeyCodes.SPACE,
+    }) as Keys;
+    const player2Keys: Keys = inputKeyword.addKeys({
+      up: Phaser.Input.Keyboard.KeyCodes.W,
+      down: Phaser.Input.Keyboard.KeyCodes.S,
+      left: Phaser.Input.Keyboard.KeyCodes.A,
+      right: Phaser.Input.Keyboard.KeyCodes.D,
+      attack: Phaser.Input.Keyboard.KeyCodes.R,
+    }) as Keys;
+
+    return this.id === PlayerID.Player1 ? player1Keys : player2Keys;
   }
 
   private generateHealthBar(id: number, name: string): void {
@@ -110,37 +168,41 @@ export default class Character {
     this.healthBar = this.scene.add.graphics();
   }
 
-  private generateCursorKeys(
-    keysOverride?: CursorOverrides,
-  ): Phaser.Types.Input.Keyboard.CursorKeys {
-    let inputKeyword: KeyboardPlugin | null = this.scene.input.keyboard;
-
-    if (!inputKeyword) {
-      throw new Error("No keyboard plugin found in scene");
+  private updateHealthBarColor(health: number): void {
+    if (health > 0.66) {
+      this.healthBar.fillStyle(green);
+    } else if (health > 0.33) {
+      this.healthBar.fillStyle(yellow);
+    } else {
+      this.healthBar.fillStyle(red);
     }
-    const defaultCursorKeys: CursorKeys = inputKeyword.createCursorKeys();
+  }
 
-    return {
-      down: keysOverride?.down ?? defaultCursorKeys.down,
-      shift: keysOverride?.dash ?? defaultCursorKeys.shift,
-      space: keysOverride?.attack ?? defaultCursorKeys.space,
-      left: keysOverride?.left ?? defaultCursorKeys.left,
-      right: keysOverride?.right ?? defaultCursorKeys.right,
-      up: keysOverride?.up ?? defaultCursorKeys.up,
-    };
+  private moveLeft(): void {
+    this.playerSprite.setVelocityX(-this.stats.speed);
+  }
+
+  private moveRight(): void {
+    this.playerSprite.setVelocityX(this.stats.speed);
+  }
+
+  private jump(): void {
+    if (this.stats.doubleJump) {
+      this.playerSprite.setVelocityY(-400);
+    } else if (this.playerSprite.body?.blocked.down) {
+      this.playerSprite.setVelocityY(-500);
+    }
   }
 
   private setStats(stats: Partial<CharacterStats>): void {
     this.stats = {
-      health: stats.health ?? 100,
       speed: stats.speed ?? 200,
       attackDamage: stats.attackDamage ?? 10,
-      attackType: stats.attackType ?? AtackType.MELEE,
       doubleJump: stats.doubleJump ?? false,
     };
   }
 
-  public createAnimations(): void {
+  private createAnimations(): void {
     this.scene.anims.create({
       key: "left",
       frames: this.scene.anims.generateFrameNumbers("dude", {
@@ -166,91 +228,5 @@ export default class Character {
       frameRate: 10,
       repeat: -1,
     });
-  }
-
-  protected moveLeft(): void {
-    this.playerSprite.setVelocityX(-this.stats.speed);
-  }
-
-  protected moveRight(): void {
-    this.playerSprite.setVelocityX(this.stats.speed);
-  }
-
-  protected jump(): void {
-    if (this.stats.doubleJump) {
-      this.playerSprite.setVelocityY(-400);
-    } else if (this.playerSprite.body?.blocked.down) {
-      this.playerSprite.setVelocityY(-500);
-    }
-  }
-
-  protected attack(): void {
-    console.log("Attack", this.stats.attackType);
-    if (this.stats.attackType === AtackType.MELEE) {
-      this.meleeAttack();
-    } else {
-      this.rangedAttack();
-    }
-  }
-
-  private meleeAttack(): void {
-    console.log("Melee attack", this.stats.attackDamage);
-  }
-
-  private rangedAttack(): void {
-    console.log("Ranged attack", this.stats.attackDamage);
-  }
-
-  // public powerUp(stats: CharacterStats, time: number, frame?: string): void {
-  //   this.setStats(stats);
-  //
-  //   if (frame) {
-  //     this.setTexture(frame, frame);
-  //   }
-  //
-  //   this.scene.time.delayedCall(time, () => {
-  //     this.setStats({});
-  //   });
-  // }
-
-  // public takeDamage(amount: number): void {
-  //   this.stats.health -= amount;
-  //   if (this.stats.health <= 0) {
-  //     this.die();
-  //   }
-  // }
-
-  // private die(): void {
-  //   this.setActive(false);
-  //   this.setVisible(false);
-  // }
-
-  public setHealth(newHealth: number) {
-    this.stats.health = newHealth;
-  }
-
-  public updateHealthBar() {
-    this.healthBar.clear();
-    this.healthBar.lineStyle(4, white);
-    const coordinates: Coordinates | undefined = healthBarCoordinates.get(
-      this.id,
-    );
-    if (coordinates) {
-      const { posX, posY }: Coordinates = coordinates;
-      this.healthBar.strokeRect(posX, posY, 200, 20);
-      const newHealth: number = this.stats.health / this.maxHealth;
-      this.updateHealthBarColor(newHealth);
-      this.healthBar.fillRect(posX, posY, newHealth * 200, 20);
-    }
-  }
-
-  private updateHealthBarColor(health: number): void {
-    if (health > 0.66) {
-      this.healthBar.fillStyle(green);
-    } else if (health > 0.33) {
-      this.healthBar.fillStyle(yellow);
-    } else {
-      this.healthBar.fillStyle(red);
-    }
   }
 }
