@@ -1,9 +1,5 @@
 import { Scene } from "phaser";
 
-type Data = {
-  winner: string;
-};
-
 export class GameOver extends Scene {
   camera: Phaser.Cameras.Scene2D.Camera;
   background: Phaser.GameObjects.Image;
@@ -21,11 +17,10 @@ export class GameOver extends Scene {
       .image(512, 384, "gameOver")
       .setDisplaySize(1024, 768);
 
-    this.sound
-      .add("backgroundMusicWinner", {
-        volume: 0.5,
-      })
-      .play();
+    const winnerMusic = this.sound.add("backgroundMusicWinner", {
+      volume: 0.5,
+    });
+    winnerMusic.play();
 
     this.gameover_text = this.add.text(512, 384, winner + " wins", {
       fontFamily: "main-font",
@@ -48,6 +43,13 @@ export class GameOver extends Scene {
       })
       .setOrigin(0.5)
       .setInteractive()
-      .on("pointerdown", () => this.scene.start("MainMenu"));
+      .on("pointerdown", () => {
+        winnerMusic.destroy();
+        this.scene.start("StartScreen");
+      });
   }
 }
+
+type Data = {
+  winner: string;
+};
