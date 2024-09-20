@@ -13,11 +13,12 @@ export class CharacterSelection extends Scene {
   }
 
   music: Music;
+  selectedMap: number = 0;
+  selectedMapBorder: GameObjects.Rectangle;
 
-  getRandomMap(): {} {
+  getMap(): {} {
     const mapData: {}[] = mapDataJSON;
-    const mapNumber: number = Math.floor(Math.random() * mapData.length);
-    return mapData[mapNumber];
+    return mapData[this.selectedMap];
   }
 
   background: GameObjects.Image;
@@ -33,27 +34,44 @@ export class CharacterSelection extends Scene {
     ) as HTMLInputElement | null;
 
     const player2Dom = this.add.dom(800, 100).createFromHTML(input2);
-    let selectedBackround: number = 0;
 
-    const bg1 = this.add
+    this.selectedMapBorder = this.add
+      .rectangle(200, 350, 200, 200)
+      .setStrokeStyle(4, 0);
+
+    this.add
       .image(200, 350, "kpsBackground")
       .setDisplaySize(200, 200)
-      .on("pointerover", () => {});
+      .setInteractive()
+      .on("pointerdown", () => {
+        this.selectedMap = 0;
+        this.setSelectedMapBorder();
+      });
 
-    const bg2 = this.add
+    this.add
       .image(500, 350, "kpsBackground2")
-      .setDisplaySize(200, 200);
+      .setDisplaySize(200, 200)
+      .setInteractive()
+      .on("pointerdown", () => {
+        this.selectedMap = 1;
+        this.setSelectedMapBorder();
+      });
 
-    const bg3 = this.add
+    this.add
       .image(800, 350, "kpsBackground")
-      .setDisplaySize(200, 200);
+      .setDisplaySize(200, 200)
+      .setInteractive()
+      .on("pointerdown", () => {
+        this.selectedMap = 2;
+        this.setSelectedMapBorder();
+      });
 
     const player2Input: HTMLInputElement | null = player2Dom.getChildByName(
       "nameField",
     ) as HTMLInputElement | null;
 
     this.add
-      .text(200, 600, "BACK", {
+      .text(150, 600, "BACK", {
         fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
@@ -66,7 +84,7 @@ export class CharacterSelection extends Scene {
       .on("pointerdown", () => this.scene.start("MainMenu"));
 
     this.add
-      .text(800, 600, "START", {
+      .text(850, 600, "START", {
         fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
@@ -82,10 +100,35 @@ export class CharacterSelection extends Scene {
         if (player1Name && player2Name) {
           this.music.destroy();
           this.scene.start("Game", {
-            mapData: this.getRandomMap(),
+            mapData: this.getMap(),
             playerData: { player1Name, player2Name },
           });
+        } else {
+          this.add
+            .text(512, 600, "Enter players names", {
+              fontFamily: "main-font",
+              fontSize: 24,
+              color: "#ff0000",
+              stroke: "#000000",
+              strokeThickness: 8,
+              align: "center",
+            })
+            .setOrigin(0.5);
         }
       });
+  }
+
+  private setSelectedMapBorder() {
+    switch (this.selectedMap) {
+      case 0:
+        this.selectedMapBorder.setPosition(200, 350);
+        break;
+      case 1:
+        this.selectedMapBorder.setPosition(500, 350);
+        break;
+      case 2:
+        this.selectedMapBorder.setPosition(800, 350);
+        break;
+    }
   }
 }
