@@ -21,10 +21,12 @@ export class Item {
     this.item.setDisplaySize(30, 30);
     this.item.setVelocity(0, 1);
     this.item.setInteractive();
+    console.log("emits item for", player);
+    console.log("physiscs", physics);
     physics.add.collider(this.item, platforms);
     physics.add.collider(
-      this.item,
       player.playerSprite,
+      this.item,
       () => this.onCollision(this.item, player),
       undefined,
       player.scene,
@@ -32,6 +34,7 @@ export class Item {
   }
 
   protected onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
+    console.log("item", item, "player", player);
     const powerUpSound = player.scene.sound.add("powerUp", { volume: 2 });
     powerUpSound.play();
     item.disableBody(true, true);
