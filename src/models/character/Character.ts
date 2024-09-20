@@ -21,7 +21,6 @@ export interface Keys {
 export interface CharacterStats {
   readonly speed: number;
   readonly attackDamage: number;
-  readonly doubleJump: boolean;
 }
 
 export const green = 0x00ff00;
@@ -29,6 +28,11 @@ export const yellow = 0xffff00;
 export const red = 0xff0000;
 export const white = 0xffffff;
 export const MAX_HEALTH: number = 100;
+const DOUBLE_JUMP_COOLDOWN: number = 500;
+const JUMP_VELOCITY: number = -400;
+const DOUBLE_JUMP_VELOCITY: number = -400;
+const PLAYER_WEIGHT: number = 600;
+const BOUNCE: number = 0.2;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
@@ -53,7 +57,10 @@ export default class Character {
   public stats: CharacterStats;
   public playerSprite: Phaser.Physics.Arcade.Sprite;
   public isAttacking: boolean;
-  public scene: Phaser.Scene;
+  private scene: Phaser.Scene;
+  private isJumping: boolean = false;
+  private canDoubleJump: boolean = false;
+  private jumpCooldown: boolean = false;
 
   constructor(
     id: number,
@@ -65,8 +72,10 @@ export default class Character {
     this.id = id;
     this.setStats(stats);
     this.playerSprite = playerSprite;
-    this.playerSprite.setBounce(0.2);
+    this.playerSprite.setBounce(BOUNCE);
     this.playerSprite.setCollideWorldBounds(true);
+    this.playerSprite.setGravityY(PLAYER_WEIGHT);
+
     this.scene = scene;
     this.createAnimations();
     this.generateHealthBar(id, name);
@@ -86,8 +95,21 @@ export default class Character {
       this.playerSprite.anims.play(`${playerId}-turn`);
     }
 
-    if (this.keys.up.isDown) {
-      this.jump();
+    if (this.keys.up.isDown && !this.jumpCooldown) {
+      if (this.playerSprite.body?.blocked.down) {
+        this.performJump(JUMP_VELOCITY);
+        this.isJumping = true;
+        this.canDoubleJump = true;
+      }
+
+      else if (this.isJumping && this.canDoubleJump) {
+        this.performJump(DOUBLE_JUMP_VELOCITY);
+        this.canDoubleJump = false;
+      }
+    }
+
+    if (this.playerSprite.body?.blocked.down && !this.isJumping) {
+      this.resetJumpFlags();
     }
 
     if (this.keys.attack.isDown) {
@@ -100,6 +122,24 @@ export default class Character {
       this.playerSprite.clearTint();
     }
   }
+
+
+  private performJump(velocityY: number): void {
+    this.playerSprite.setVelocityY(velocityY);
+    this.jumpCooldown = true;
+
+    this.scene.time.delayedCall(DOUBLE_JUMP_COOLDOWN, () => {
+      this.jumpCooldown = false;
+    });
+  }
+
+  private resetJumpFlags(): void {
+    this.isJumping = false;
+    this.canDoubleJump = false;
+    this.jumpCooldown = false;
+  }
+
+
 
   private performAttack() {
     this.isAttacking = true;
@@ -201,19 +241,10 @@ export default class Character {
     this.playerSprite.setVelocityX(this.stats.speed);
   }
 
-  private jump(): void {
-    if (this.stats.doubleJump) {
-      this.playerSprite.setVelocityY(-400);
-    } else if (this.playerSprite.body?.blocked.down) {
-      this.playerSprite.setVelocityY(-500);
-    }
-  }
-
   public setStats(stats: Partial<CharacterStats>): void {
     this.stats = {
       speed: stats.speed ?? 200,
       attackDamage: stats.attackDamage ?? 10,
-      doubleJump: stats.doubleJump ?? false,
     };
   }
 

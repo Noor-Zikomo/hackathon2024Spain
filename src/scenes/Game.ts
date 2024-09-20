@@ -134,6 +134,10 @@ export class Game extends Scene {
       undefined,
       this,
     );
+
+    this.physics.add.collider(playerSprite1, this.platforms);
+    this.physics.add.collider(playerSprite2, this.platforms);
+
   }
 
   private setupHealthBars() {
