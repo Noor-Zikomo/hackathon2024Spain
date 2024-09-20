@@ -49,7 +49,7 @@ export class Game extends Scene {
 
   public update() {
     this.player1.update();
-    this.player2.update();
+    //this.player2.update();
   }
 
   private handleMap() {
@@ -93,7 +93,7 @@ export class Game extends Scene {
       randomItem = new Coffee();
     }
 
-    randomItem.emitItem(this.physics, this.platforms);
+    randomItem.emitItem(this.physics, this.platforms, this.player1);
   }
 
   private createPlayers() {
@@ -104,19 +104,11 @@ export class Game extends Scene {
       {},
       this,
     );
-
-    this.player2 = new Character(
-      PlayerID.Player2,
-      "Player 2",
-      this.physics.add.sprite(-100, 450, "dude"),
-      {},
-      this,
-    );
   }
 
   private setupHealthBars() {
     this.player1.updateHealthBar();
-    this.player2.updateHealthBar();
+    //this.player2.updateHealthBar();
   }
 
   private reduceHealth(player: Character) {
