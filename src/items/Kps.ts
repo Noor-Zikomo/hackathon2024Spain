@@ -11,15 +11,19 @@ export class KpsToken extends Item {
     super.onCollision(item, player);
     const originalSpeed = player.stats.speed;
     const originalAtk = player.stats.attackDamage;
-    player.setStats({
-      ...player.stats,
-      speed: originalSpeed + configuration["kps"]["speedBoost"],
-      attackDamage: originalAtk + configuration["kps"]["atkBoost"],
-    });
+    let statsWereModified: boolean = false;
+    if (player.stats.speed < configuration["player"]["maxSpeed"]) {
+      player.setStats({
+        ...player.stats,
+        speed: originalSpeed + configuration["kps"]["speedBoost"],
+        attackDamage: originalAtk + configuration["kps"]["atkBoost"],
+      });
+      statsWereModified = true;
+    }
     player.scene.time.delayedCall(configuration["kps"]["delay"], () => {
       const modifiedSpeed = player.stats.speed;
       const modifiedAtk = player.stats.attackDamage;
-      if (player.stats.speed > configuration["player"]["maxSpeed"]) {
+      if (statsWereModified) {
         player.setStats({
           ...player.stats,
           speed: modifiedSpeed - configuration["coffee"]["speedBoost"],
