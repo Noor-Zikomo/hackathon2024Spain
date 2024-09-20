@@ -94,7 +94,7 @@ export class Game extends Scene {
       randomItem = new Coffee();
     }
 
-    randomItem.emitItem(this.physics, this.platforms);
+    randomItem.emitItem(this.physics, this.platforms, this.player1);
   }
 
   private createPlayers({ player1Name, player2Name }: PlayerData) {
