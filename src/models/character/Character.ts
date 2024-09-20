@@ -160,6 +160,7 @@ export default class Character {
 
     if (this.keys.attack.isDown && this.canAttack) {
       this.performAttack();
+      this.playerSprite.anims.play(`${playerId}-attack`, true);
     }
 
     this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
@@ -353,6 +354,19 @@ export default class Character {
         start: 0,
         end: 9,
       }),
+      frameRate: 10,
+      repeat: -1,
+    });
+
+    this.scene.anims.create({
+      key: `${playerId}-attack`,
+      frames: this.scene.anims.generateFrameNumbers(
+        `player${playerId}_attack`,
+        {
+          start: 0,
+          end: 3,
+        },
+      ),
       frameRate: 10,
       repeat: -1,
     });
