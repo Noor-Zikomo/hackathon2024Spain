@@ -30,9 +30,13 @@ export class Preloader extends Scene {
     this.load.audio("backgroundMusicMenu", "audio/background-music-menu.mp3");
     this.load.audio("backgroundMusicFight", "audio/background-music-fight.mp3");
     this.load.audio("powerUp", "audio/power-up.mp3");
-    this.load.spritesheet("dude", "dude.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.spritesheet("player0", "characters/City_men_1/Run.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("player1", "characters/City_men_2/Run.png", {
+      frameWidth: 128,
+      frameHeight: 128,
     });
     this.load.image("background", "sky.png");
     this.load.css("fontStyles", "fonts/fonts.css");

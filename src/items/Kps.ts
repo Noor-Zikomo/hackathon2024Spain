@@ -25,6 +25,9 @@ export class KpsToken extends Item {
       });
     });
     player.setHealth((player.health += 80));
+    if (player.health > 100) {
+      player.setHealth(100);
+    }
     player.updateHealthBar();
   }
 }

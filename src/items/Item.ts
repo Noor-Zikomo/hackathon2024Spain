@@ -22,8 +22,12 @@ export class Item {
     this.item.setVelocity(0, 1);
     this.item.setInteractive();
     physics.add.collider(this.item, platforms);
-    physics.add.collider(this.item, player.playerSprite, () =>
-      this.onCollision(this.item, player),
+    physics.add.collider(
+      this.item,
+      player.playerSprite,
+      () => this.onCollision(this.item, player),
+      undefined,
+      player.scene,
     );
   }
 
