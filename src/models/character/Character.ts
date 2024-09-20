@@ -44,7 +44,6 @@ const BOUNCE: number = 0.2;
 const DASH_VELOCITY: number = 600;
 const DASH_DURATION: number = 200;
 const DASH_COOLDOWN: number = 700;
-const JUMP_BREAKER_VELOCITY: number = 400;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
@@ -144,14 +143,6 @@ export default class Character {
       }
     }
 
-    if (
-      this.keys.down.isDown &&
-      !this.playerSprite.body?.blocked.down &&
-      this.isJumping
-    ) {
-      this.performJumpBreaker();
-    }
-
     if (this.keys.up.isDown && !this.jumpCooldown) {
       if (this.playerSprite.body?.blocked.down) {
         this.performJump(JUMP_VELOCITY);
@@ -182,14 +173,6 @@ export default class Character {
     this.scene.time.delayedCall(DOUBLE_JUMP_COOLDOWN, () => {
       this.jumpCooldown = false;
     });
-  }
-
-  private performJumpBreaker(): void {
-    if (this.isJumping) {
-      this.playerSprite.setVelocityY(JUMP_BREAKER_VELOCITY);
-    } else {
-      this.playerSprite.setVelocityY(0);
-    }
   }
 
   private resetJumpFlags(): void {
