@@ -135,7 +135,7 @@ export default class Character {
         this.lastFlipX = false;
       } else if (this.knockBack) {
         this.handleKnockBack(this.knockBack);
-        this.playerSprite.anims.play(`${playerId}-right`, true);
+        this.playerSprite.anims.play(`${playerId}-hurt`, true);
       } else if (!this.isDashing) {
         this.playerSprite.setVelocityX(0);
         this.playerSprite.anims.play(`${playerId}-turn`);
@@ -395,6 +395,16 @@ export default class Character {
           end: 3,
         },
       ),
+      frameRate: 1,
+      repeat: 0,
+    });
+
+    this.scene.anims.create({
+      key: `${playerId}-hurt`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}_hurt`, {
+        start: 0,
+        end: 3,
+      }),
       frameRate: 10,
       repeat: -1,
     });

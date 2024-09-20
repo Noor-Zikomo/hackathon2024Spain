@@ -65,7 +65,14 @@ export class Preloader extends Scene {
       frameWidth: 128,
       frameHeight: 128,
     });
-
+    this.load.spritesheet("player0_hurt", "characters/blue/Hurt.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("player1_hurt", "characters/red/Hurt.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
     this.load.image("background", "sky.png");
     this.load.image("star", "/items/star.png");
     this.load.image("coffee", "/items/coffee.png");
