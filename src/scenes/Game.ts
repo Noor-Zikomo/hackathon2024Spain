@@ -101,7 +101,7 @@ export class Game extends Scene {
     this.player1 = new Character(
       PlayerID.Player1,
       player1Name,
-      this.physics.add.sprite(100, 450, "dude"),
+      this.physics.add.sprite(100, 450, "player0"),
       {},
       this,
     );
@@ -109,7 +109,7 @@ export class Game extends Scene {
     this.player2 = new Character(
       PlayerID.Player2,
       player2Name,
-      this.physics.add.sprite(90, 450, "dude"),
+      this.physics.add.sprite(90, 450, "player1"),
       {},
       this,
     );

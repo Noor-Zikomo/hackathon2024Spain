@@ -74,15 +74,16 @@ export default class Character {
   }
 
   public update(): void {
+    const playerId = this.id;
     if (this.keys.left.isDown) {
       this.moveLeft();
-      this.playerSprite.anims.play("left", true);
+      this.playerSprite.anims.play(`${playerId}-left`, true);
     } else if (this.keys.right.isDown) {
       this.moveRight();
-      this.playerSprite.anims.play("right", true);
+      this.playerSprite.anims.play(`${playerId}-right`, true);
     } else {
       this.playerSprite.setVelocityX(0);
-      this.playerSprite.anims.play("turn");
+      this.playerSprite.anims.play(`${playerId}-turn`);
     }
 
     if (this.keys.up.isDown) {
@@ -217,9 +218,11 @@ export default class Character {
   }
 
   private createAnimations(): void {
+    const playerId = this.id;
+
     this.scene.anims.create({
-      key: "left",
-      frames: this.scene.anims.generateFrameNumbers("dude", {
+      key: `${playerId}-left`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}`, {
         start: 0,
         end: 3,
       }),
@@ -228,14 +231,14 @@ export default class Character {
     });
 
     this.scene.anims.create({
-      key: "turn",
-      frames: [{ key: "dude", frame: 4 }],
+      key: `${playerId}-turn`,
+      frames: [{ key: `player${playerId}`, frame: 4 }],
       frameRate: 20,
     });
 
     this.scene.anims.create({
-      key: "right",
-      frames: this.scene.anims.generateFrameNumbers("dude", {
+      key: `${playerId}-right`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}`, {
         start: 5,
         end: 8,
       }),
