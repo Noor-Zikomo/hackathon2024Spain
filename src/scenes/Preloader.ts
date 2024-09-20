@@ -40,7 +40,8 @@ export class Preloader extends Scene {
     this.load.image("kpsToken", "/items/kps.png");
     this.load.image("snack", "food/43.png");
     this.load.image("beer", "food/6.png");
-    this.load.image("kpsBackground", "kpsBackground.jpg");
+    this.load.image("kpsBackground", "backgrounds/kpsBackground.jpg");
+    this.load.image("kpsBackground2", "backgrounds/kpsBackground2.jpg");
   }
 
   public create() {

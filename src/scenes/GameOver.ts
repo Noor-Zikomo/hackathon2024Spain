@@ -26,8 +26,17 @@ export class GameOver extends Scene {
     });
     this.gameover_text.setOrigin(0.5);
 
-    this.input.once("pointerdown", () => {
-      this.scene.start("MainMenu");
-    });
+    this.add
+      .text(512, 600, "PLAY AGAIN", {
+        fontFamily: "main-font",
+        fontSize: 38,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(0.5)
+      .setInteractive()
+      .on("pointerdown", () => this.scene.start("MainMenu"));
   }
 }

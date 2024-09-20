@@ -1,5 +1,5 @@
 import { Scene } from "phaser";
-import { GameConfig, MapConfig, PlatformConfig } from "../types.ts";
+import { GameConfig, MapConfig, PlatformConfig, PlayerData } from "../types.ts";
 import { Coffee } from "../items/Coffee.ts";
 import { Beer } from "../items/Beer.ts";
 import { Snack } from "../items/Snack.ts";
@@ -19,18 +19,15 @@ export class Game extends Scene {
     super("Game");
   }
 
-  public create(data: GameConfig) {
-    this.mapData = data["mapData"];
-    this.handleMap();
+  create({ mapData, playerData }: GameConfig) {
+    this.mapData = mapData;
 
+    this.handleMap();
     this.camera = this.cameras.main;
-    this.camera.setBackgroundColor(0x00ff00);
 
-    this.background = this.add.image(512, 384, "background");
-    this.background.setAlpha(0.5);
-    this.handleMap();
+    this.camera.setBackgroundColor(0x00ff00);
     this.addItems();
-    this.createPlayers();
+    this.createPlayers(playerData);
     this.setupHealthBars();
 
     const backgroundMusic = this.sound.add("backgroundMusicFight", {
@@ -38,6 +35,22 @@ export class Game extends Scene {
       loop: true,
     });
     backgroundMusic.play();
+
+    this.add
+      .text(800, 600, "END", {
+        fontFamily: "Arial Black",
+        fontSize: 38,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(0.5)
+      .setInteractive()
+      .on("pointerdown", () => {
+        backgroundMusic.destroy();
+        this.scene.start("GameOver");
+      });
 
     this.time.addEvent({
       delay: 1000,
@@ -96,10 +109,10 @@ export class Game extends Scene {
     randomItem.emitItem(this.physics, this.platforms);
   }
 
-  private createPlayers() {
+  private createPlayers({ player1Name, player2Name }: PlayerData) {
     this.player1 = new Character(
       PlayerID.Player1,
-      "Player 1",
+      player1Name,
       this.physics.add.sprite(100, 450, "dude"),
       {},
       this,
@@ -107,7 +120,7 @@ export class Game extends Scene {
 
     this.player2 = new Character(
       PlayerID.Player2,
-      "Player 2",
+      player2Name,
       this.physics.add.sprite(-100, 450, "dude"),
       {},
       this,

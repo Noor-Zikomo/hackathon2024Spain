@@ -1,25 +1,42 @@
-import { Scene, GameObjects } from "phaser";
-import mapDataJSON from "../../public/assets/maps/layoutMaps.json";
+import { GameObjects, Scene } from "phaser";
+
+type ControlsDisplay = {
+  jump: string;
+  left: string;
+  right: string;
+};
+
+type ItemsDisplay = {
+  icon: string;
+  description: string;
+};
+
+export type Music =
+  | Phaser.Sound.NoAudioSound
+  | Phaser.Sound.HTML5AudioSound
+  | Phaser.Sound.WebAudioSound;
+
+const sideDistance: number = 150;
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
-  logo: GameObjects.Image;
-  title: GameObjects.Text;
 
-  public constructor() {
+  constructor() {
     super("MainMenu");
-  }
-  getRandomMap(): {} {
-    const mapData: {}[] = mapDataJSON;
-    const mapNumber: number = Math.floor(Math.random() * mapData.length);
-    return mapData[mapNumber];
   }
 
   create() {
-    this.logo = this.add.image(512, 300, "logo");
+    const { width } = this.sys.canvas;
 
-    this.title = this.add
-      .text(512, 460, "Mortal KPS placeholder", {
+    this.background = this.add.image(512, 384, "background");
+    const backgroundMusic: Music = this.sound.add("backgroundMusicMenu", {
+      volume: 0.5,
+      loop: true,
+    });
+    backgroundMusic.play();
+
+    this.add
+      .text(512, 100, "MORTAL KPS", {
         fontFamily: "main-font",
         fontSize: 38,
         color: "#ffffff",
@@ -29,14 +46,99 @@ export class MainMenu extends Scene {
       })
       .setOrigin(0.5);
 
-    const backgroundMusic = this.sound.add("backgroundMusicMenu", {
-      volume: 0.5,
-      loop: true,
-    });
-    backgroundMusic.play();
+    this.add
+      .text(sideDistance + 150, 275, "CONTROLS", {
+        fontFamily: "main-font",
+        fontSize: 26,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(0.5);
 
-    this.input.once("pointerdown", () => {
-      this.scene.start("Game", { mapData: this.getRandomMap() });
+    const player1Controls: ControlsDisplay = {
+      jump: "W",
+      left: "A",
+      right: "D",
+    };
+    this.displayControls(player1Controls, sideDistance);
+
+    const player2Controls: ControlsDisplay = {
+      jump: "↑",
+      left: "←",
+      right: "→",
+    };
+    this.displayControls(player2Controls, sideDistance + 200);
+
+    this.add
+      .text(width - sideDistance - 150, 275, "ITEMS", {
+        fontFamily: "main-font",
+        fontSize: 26,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(0.5);
+
+    const items: Array<ItemsDisplay> = [
+      { icon: "coffee", description: "Speed up" },
+      { icon: "kpsToken", description: "Power up" },
+      { icon: "snack", description: "Gives hp" },
+      { icon: "beer", description: "Gives strength" },
+    ];
+
+    let initialItemsY: number = 350;
+
+    items.forEach(({ icon, description }) => {
+      this.add
+        .image(width - sideDistance - 250, initialItemsY, icon)
+        .setDisplaySize(30, 30);
+      this.printText(width - sideDistance - 100, initialItemsY, description);
+
+      initialItemsY += 50;
     });
+
+    this.add
+      .text(512, 600, "PLAY", {
+        fontFamily: "main-font",
+        fontSize: 38,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(0.5)
+      .setInteractive()
+      .on("pointerdown", () => {
+        this.scene.start("CharacterSelection", { music: backgroundMusic });
+      });
+  }
+
+  private printText(positionX: number, positionY: number, value: string): void {
+    this.add
+      .text(positionX, positionY, value, {
+        fontFamily: "main-font",
+        fontSize: 20,
+        color: "#ffffff",
+        stroke: "#000000",
+        strokeThickness: 8,
+        align: "center",
+      })
+      .setOrigin(0.5);
+  }
+
+  private displayControls(controls: ControlsDisplay, positionX: number): void {
+    let initialControlsY: number = 350;
+
+    Object.entries(controls).forEach(
+      ([key, controlValue]: [string, string]) => {
+        this.printText(positionX, initialControlsY, controlValue);
+        this.printText(positionX + 75, initialControlsY, key.toUpperCase());
+
+        initialControlsY += 50;
+      },
+    );
   }
 }
