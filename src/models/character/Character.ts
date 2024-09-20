@@ -78,6 +78,7 @@ export default class Character {
   private jumpCooldown: boolean = false;
   private isDashing: boolean = false;
   private canDash: boolean = true;
+  private isDead: boolean = false;
 
   constructor(
     id: number,
@@ -113,57 +114,66 @@ export default class Character {
 
   public update(): void {
     const playerId = this.id;
-    if (this.keys.left.isDown && !this.isDashing) {
-      this.moveLeft();
-      this.lastFlipX = true;
-      this.playerSprite.flipX = true;
-      this.playerSprite.anims.play(`${playerId}-left`, true);
-    } else if (this.keys.right.isDown && !this.isDashing) {
-      this.moveRight();
-      this.playerSprite.flipX = false;
-      this.lastFlipX = false;
-      this.playerSprite.anims.play(`${playerId}-right`, true);
-    } else if (this.knockBack) {
-      this.handleKnockBack(this.knockBack);
-      this.playerSprite.anims.play(`${playerId}-right`, true);
-    } else if (!this.isDashing) {
-      this.playerSprite.setVelocityX(0);
-      this.playerSprite.anims.play(`${playerId}-turn`);
+
+    if (this.health <= 0 && !this.isDead) {
+      this.playDeathAnimation();
+      this.isDead = true;
+      return;
     }
 
-    if (
-      this.keys.dash.isDown &&
-      (this.keys.left.isDown || this.keys.right.isDown) &&
-      !this.isDashing
-    ) {
-      if (this.keys.left.isDown) {
-        this.performDash("left");
-      } else if (this.keys.right.isDown) {
-        this.performDash("right");
+    if (!this.isDead) {
+      if (this.keys.left.isDown && !this.isDashing) {
+        this.moveLeft();
+        this.lastFlipX = true;
+        this.playerSprite.flipX = true;
+        this.playerSprite.anims.play(`${playerId}-left`, true);
+      } else if (this.keys.right.isDown && !this.isDashing) {
+        this.moveRight();
+        this.playerSprite.flipX = false;
+        this.lastFlipX = false;
+        this.playerSprite.anims.play(`${playerId}-right`, true);
+      } else if (this.knockBack) {
+        this.handleKnockBack(this.knockBack);
+        this.playerSprite.anims.play(`${playerId}-right`, true);
+      } else if (!this.isDashing) {
+        this.playerSprite.setVelocityX(0);
+        this.playerSprite.anims.play(`${playerId}-turn`);
       }
-    }
 
-    if (this.keys.up.isDown && !this.jumpCooldown) {
-      if (this.playerSprite.body?.blocked.down) {
-        this.performJump(JUMP_VELOCITY);
-        this.isJumping = true;
-        this.canDoubleJump = true;
-      } else if (this.isJumping && this.canDoubleJump) {
-        this.performJump(DOUBLE_JUMP_VELOCITY);
-        this.canDoubleJump = false;
+      if (
+        this.keys.dash.isDown &&
+        (this.keys.left.isDown || this.keys.right.isDown) &&
+        !this.isDashing
+      ) {
+        if (this.keys.left.isDown) {
+          this.performDash("left");
+        } else if (this.keys.right.isDown) {
+          this.performDash("right");
+        }
       }
-    }
 
-    if (this.playerSprite.body?.blocked.down && !this.isJumping) {
-      this.resetJumpFlags();
-    }
+      if (this.keys.up.isDown && !this.jumpCooldown) {
+        if (this.playerSprite.body?.blocked.down) {
+          this.performJump(JUMP_VELOCITY);
+          this.isJumping = true;
+          this.canDoubleJump = true;
+        } else if (this.isJumping && this.canDoubleJump) {
+          this.performJump(DOUBLE_JUMP_VELOCITY);
+          this.canDoubleJump = false;
+        }
+      }
 
-    if (this.keys.attack.isDown && this.canAttack) {
-      this.performAttack();
-    }
+      if (this.playerSprite.body?.blocked.down && !this.isJumping) {
+        this.resetJumpFlags();
+      }
 
-    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
-    this.attackHitBox.y = this.playerSprite.y;
+      if (this.keys.attack.isDown && this.canAttack) {
+        this.performAttack();
+      }
+
+      this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
+      this.attackHitBox.y = this.playerSprite.y;
+    }
   }
 
   private performJump(velocityY: number): void {
@@ -204,6 +214,11 @@ export default class Character {
     setTimeout(() => {
       this.isAttacking = false;
     }, 100);
+  }
+
+  private playDeathAnimation(): void {
+    this.playerSprite.anims.play(`${this.id}-dead`, true);
+    this.playerSprite.setVelocity(0);
   }
 
   public attack(enemy: Character): void {
@@ -355,6 +370,16 @@ export default class Character {
       }),
       frameRate: 10,
       repeat: -1,
+    });
+
+    this.scene.anims.create({
+      key: `${playerId}-dead`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}_dead`, {
+        start: 0,
+        end: 4,
+      }),
+      frameRate: 4,
+      repeat: 0,
     });
   }
 }
