@@ -105,10 +105,12 @@ export default class Character {
     if (this.keys.left.isDown) {
       this.moveLeft();
       this.lastFlipX = true;
+      this.playerSprite.flipX = true;
       this.playerSprite.anims.play("left", true);
       this.playerSprite.anims.play(`${playerId}-left`, true);
     } else if (this.keys.right.isDown) {
       this.moveRight();
+      this.playerSprite.flipX = false;
       this.lastFlipX = false;
       this.playerSprite.anims.play("right", true);
     } else if (this.knockBack) {
