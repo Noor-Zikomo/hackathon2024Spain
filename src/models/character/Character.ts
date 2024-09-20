@@ -93,8 +93,8 @@ export default class Character {
     this.playerSprite.setBounce(BOUNCE);
     this.playerSprite.setCollideWorldBounds(true);
     this.playerSprite.setGravityY(PLAYER_WEIGHT);
-    this.playerSprite.setSize(45, 80);
-    this.playerSprite.setOffset(35, 50);
+    this.playerSprite.setSize(35, 80);
+    this.playerSprite.setOffset(45, 50);
 
     this.scene = scene;
     this.createAnimations();
@@ -131,7 +131,8 @@ export default class Character {
         this.moveRight();
         this.playerSprite.flipX = false;
 
-        this.playerSprite.anims.play(`${playerId}-right`, true);this.lastFlipX = false;
+        this.playerSprite.anims.play(`${playerId}-right`, true);
+        this.lastFlipX = false;
       } else if (this.knockBack) {
         this.handleKnockBack(this.knockBack);
         this.playerSprite.anims.play(`${playerId}-right`, true);
@@ -169,12 +170,14 @@ export default class Character {
 
       if (this.keys.attack.isDown && this.canAttack) {
         this.performAttack();
-      this.playerSprite.anims.play(`${playerId}-attack`, true);
-    }
+        this.playerSprite.anims.play(`${playerId}-attack`, true);
+      }
 
       this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -40 : 30);
       this.attackHitBox.y = this.playerSprite.y;
     }
+    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -36 : 33);
+    this.attackHitBox.y = this.playerSprite.y;
   }
 
   private performJump(velocityY: number): void {
