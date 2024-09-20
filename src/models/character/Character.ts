@@ -34,6 +34,8 @@ export const yellow = 0xffff00;
 export const red = 0xff0000;
 export const white = 0xffffff;
 export const MAX_HEALTH: number = 100;
+export const COOLDOWN_ATTACK: number = 500;
+export const KNOCK_BACK_POWER: number = 300;
 const DOUBLE_JUMP_COOLDOWN: number = 400;
 const JUMP_VELOCITY: number = -600;
 const DOUBLE_JUMP_VELOCITY: number = -500;
@@ -43,6 +45,7 @@ const DASH_VELOCITY: number = 600;
 const DASH_DURATION: number = 200;
 const DASH_COOLDOWN: number = 1000;
 const JUMP_BREAKER_VELOCITY: number = 400;
+
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
