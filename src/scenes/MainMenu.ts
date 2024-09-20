@@ -31,12 +31,14 @@ export class MainMenu extends Scene {
   create() {
     const { width } = this.sys.canvas;
 
-    this.background = this.add.image(512, 384, "background");
+    this.background = this.add.image(512, 384, "main");
     const backgroundMusic: Music = this.sound.add("backgroundMusicMenu", {
       volume: 0.5,
       loop: true,
     });
     backgroundMusic.play();
+
+    this.add.rectangle(512, 400, 1024, 900).setFillStyle(0, 100);
 
     this.add
       .text(512, 100, "MORTAL KPS", {
