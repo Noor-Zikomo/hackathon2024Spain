@@ -37,9 +37,8 @@ export class CharacterSelection extends Scene {
 
     const bg1 = this.add
       .image(200, 350, "kpsBackground")
-      .setDisplaySize(200, 200).on('pointerover', () => {
-          bg1.
-        });
+      .setDisplaySize(200, 200)
+      .on("pointerover", () => {});
 
     const bg2 = this.add
       .image(500, 350, "kpsBackground2")
