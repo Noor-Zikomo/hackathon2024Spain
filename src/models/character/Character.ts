@@ -118,13 +118,12 @@ export default class Character {
       this.moveLeft();
       this.lastFlipX = true;
       this.playerSprite.flipX = true;
-      this.playerSprite.anims.play("left", true);
       this.playerSprite.anims.play(`${playerId}-left`, true);
     } else if (this.keys.right.isDown && !this.isDashing) {
       this.moveRight();
       this.playerSprite.flipX = false;
       this.lastFlipX = false;
-      this.playerSprite.anims.play("right", true);
+      this.playerSprite.anims.play(`${playerId}-right`, true);
     } else if (this.knockBack) {
       this.handleKnockBack(this.knockBack);
       this.playerSprite.anims.play(`${playerId}-right`, true);
@@ -353,7 +352,7 @@ export default class Character {
       key: `${playerId}-left`,
       frames: this.scene.anims.generateFrameNumbers(`player${playerId}`, {
         start: 0,
-        end: 3,
+        end: 9,
       }),
       frameRate: 10,
       repeat: -1,
@@ -361,15 +360,15 @@ export default class Character {
 
     this.scene.anims.create({
       key: `${playerId}-turn`,
-      frames: [{ key: `player${playerId}`, frame: 4 }],
+      frames: [{ key: `player${playerId}_idle`, frame: 4 }],
       frameRate: 20,
     });
 
     this.scene.anims.create({
       key: `${playerId}-right`,
       frames: this.scene.anims.generateFrameNumbers(`player${playerId}`, {
-        start: 5,
-        end: 8,
+        start: 0,
+        end: 9,
       }),
       frameRate: 10,
       repeat: -1,
