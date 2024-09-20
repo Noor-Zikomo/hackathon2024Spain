@@ -5,6 +5,7 @@ import { MainMenu } from "./scenes/MainMenu";
 import { Preloader } from "./scenes/Preloader";
 
 import { Game, Types } from "phaser";
+import { CharacterSelection } from "./scenes/CharacterSelection.ts";
 
 //  Find out more information about the Game Config at:
 //  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
@@ -14,10 +15,14 @@ const config: Types.Core.GameConfig = {
   height: 768,
   parent: "game-container",
   backgroundColor: "#028af8",
+  dom: {
+    createContainer: true,
+  },
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
+  scene: [Boot, CharacterSelection, Preloader, MainMenu, MainGame, GameOver],
   physics: {
     default: "arcade",
     arcade: {
@@ -25,7 +30,6 @@ const config: Types.Core.GameConfig = {
       debug: false,
     },
   },
-  scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
 };
 
 export default new Game(config);
