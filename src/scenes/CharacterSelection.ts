@@ -58,7 +58,7 @@ export class CharacterSelection extends Scene {
       });
 
     this.add
-      .image(800, 350, "kpsBackground")
+      .image(800, 350, "kpsBackground3")
       .setDisplaySize(200, 200)
       .setInteractive()
       .on("pointerdown", () => {

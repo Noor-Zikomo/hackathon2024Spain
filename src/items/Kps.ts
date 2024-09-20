@@ -8,8 +8,26 @@ export class KpsToken extends Item {
 
   public onCollision(item: Phaser.Physics.Arcade.Image, player: Character) {
     super.onCollision(item, player);
-    console.log("kps");
-    player.setHealth((player.health += 20));
+    const originalSpeed = player.stats.speed;
+    const originalAtk = player.stats.attackDamage;
+    player.setStats({
+      ...player.stats,
+      speed: originalSpeed + 400,
+      attackDamage: originalAtk + 20,
+    });
+    player.scene.time.delayedCall(10000, () => {
+      const modifiedSpeed = player.stats.speed;
+      const modifiedAtk = player.stats.attackDamage;
+      player.setStats({
+        ...player.stats,
+        speed: modifiedSpeed - 300,
+        attackDamage: modifiedAtk - 20,
+      });
+    });
+    player.setHealth((player.health += 80));
+    if (player.health > 100) {
+      player.setHealth(100);
+    }
     player.updateHealthBar();
   }
 }

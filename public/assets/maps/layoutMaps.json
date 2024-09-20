@@ -37,6 +37,66 @@
         "y": 800,
         "scale": 1,
         "key": "platform"
+      },
+      {
+        "x": 200,
+        "y": 400,
+        "scale": 1,
+        "key": "platform9"
+      },
+      {
+        "x": 800,
+        "y": 400,
+        "scale": 1,
+        "key": "platform9"
+      },
+      {
+        "x": 1100,
+        "y": 400,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": -100,
+        "y": 400,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": 1100,
+        "y": 600,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": -100,
+        "y": 600,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": 1100,
+        "y": 200,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": -100,
+        "y": 200,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": 500,
+        "y": 500,
+        "scale": 1,
+        "key": "platform8"
+      },
+      {
+        "x": 500,
+        "y": 300,
+        "scale": 1,
+        "key": "platform8"
       }
     ]
   },
@@ -78,6 +138,71 @@
         "y": 800,
         "scale": 1,
         "key": "platform"
+      },
+      {
+        "x": -100,
+        "y": 500,
+        "scale": 1,
+        "key": "platform6"
+      },
+      {
+        "x": 500,
+        "y": 500,
+        "scale": 1,
+        "key": "platform6"
+      },
+      {
+        "x": 1100,
+        "y": 500,
+        "scale": 1,
+        "key": "platform6"
+      },
+      {
+        "x": 250,
+        "y": 300,
+        "scale": 1,
+        "key": "platform7"
+      },
+      {
+        "x": 750,
+        "y": 300,
+        "scale": 1,
+        "key": "platform7"
+      }
+    ]
+  },
+  {
+    "id": "kpsBackground3",
+    "config": [
+      {
+        "x": 512,
+        "y": 700,
+        "scale": 1,
+        "key": "platform2"
+      },
+      {
+        "x": 512,
+        "y": 535,
+        "scale": 1,
+        "key": "platform3"
+      },
+      {
+        "x": 295,
+        "y": 450,
+        "scale": 1,
+        "key": "platform4"
+      },
+      {
+        "x": 800,
+        "y": 300,
+        "scale": 1,
+        "key": "platform5"
+      },
+      {
+        "x": 200,
+        "y": 200,
+        "scale": 1,
+        "key": "platform5"
       }
     ]
   }

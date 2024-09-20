@@ -29,9 +29,14 @@ export class Preloader extends Scene {
     this.load.image("logo", "logo.png");
     this.load.audio("backgroundMusicMenu", "audio/background-music-menu.mp3");
     this.load.audio("backgroundMusicFight", "audio/background-music-fight.mp3");
-    this.load.spritesheet("dude", "dude.png", {
-      frameWidth: 32,
-      frameHeight: 48,
+    this.load.audio("powerUp", "audio/power-up.mp3");
+    this.load.spritesheet("player0", "characters/City_men_1/Run.png", {
+      frameWidth: 128,
+      frameHeight: 128,
+    });
+    this.load.spritesheet("player1", "characters/City_men_2/Run.png", {
+      frameWidth: 128,
+      frameHeight: 128,
     });
     this.load.image("background", "sky.png");
     this.load.css("fontStyles", "fonts/fonts.css");
@@ -42,6 +47,7 @@ export class Preloader extends Scene {
     this.load.image("beer", "food/6.png");
     this.load.image("kpsBackground", "backgrounds/kpsBackground.jpg");
     this.load.image("kpsBackground2", "backgrounds/kpsBackground2.jpg");
+    this.load.image("kpsBackground3", "backgrounds/kpsBackground3.jpg");
   }
 
   public create() {

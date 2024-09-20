@@ -21,7 +21,11 @@ export interface Keys {
 export interface CharacterStats {
   readonly speed: number;
   readonly attackDamage: number;
-  readonly doubleJump: boolean;
+}
+
+export interface KnockBack {
+  flipX: boolean;
+  knockBackPower: number;
 }
 
 export const green = 0x00ff00;
@@ -29,6 +33,13 @@ export const yellow = 0xffff00;
 export const red = 0xff0000;
 export const white = 0xffffff;
 export const MAX_HEALTH: number = 100;
+const DOUBLE_JUMP_COOLDOWN: number = 500;
+const JUMP_VELOCITY: number = -600;
+const DOUBLE_JUMP_VELOCITY: number = -500;
+const PLAYER_WEIGHT: number = 600;
+const BOUNCE: number = 0.2;
+export const COOLDOWN_ATTACK: number = 500;
+export const KNOCK_BACK_POWER: number = 300;
 
 export const healthBarCoordinates: Map<PlayerID, Coordinates> = new Map<
   number,
@@ -52,8 +63,15 @@ export default class Character {
   public health: number = MAX_HEALTH;
   public stats: CharacterStats;
   public playerSprite: Phaser.Physics.Arcade.Sprite;
-  public isAttacking: boolean;
-  private scene: Phaser.Scene;
+  public isAttacking: boolean = false;
+  public knockBack: KnockBack | undefined = undefined;
+  public canAttack = true;
+  public attackHitBox: Phaser.Physics.Arcade.Sprite;
+  public lastFlipX: boolean;
+  public scene: Phaser.Scene;
+  private isJumping: boolean = false;
+  private canDoubleJump: boolean = false;
+  private jumpCooldown: boolean = false;
 
   constructor(
     id: number,
@@ -65,53 +83,103 @@ export default class Character {
     this.id = id;
     this.setStats(stats);
     this.playerSprite = playerSprite;
-    this.playerSprite.setBounce(0.2);
+    this.playerSprite.setBounce(BOUNCE);
     this.playerSprite.setCollideWorldBounds(true);
+    this.playerSprite.setGravityY(PLAYER_WEIGHT);
+
     this.scene = scene;
     this.createAnimations();
     this.generateHealthBar(id, name);
     this.keys = this.generateCursorKeys();
+    this.attackHitBox = this.scene.physics.add.sprite(
+      this.playerSprite.x + 30,
+      this.playerSprite.y,
+      "",
+    );
+    this.attackHitBox.setVisible(false);
+    this.attackHitBox.setCollideWorldBounds(true);
   }
 
   public update(): void {
+    const playerId = this.id;
     if (this.keys.left.isDown) {
       this.moveLeft();
+      this.lastFlipX = true;
       this.playerSprite.anims.play("left", true);
+      this.playerSprite.anims.play(`${playerId}-left`, true);
     } else if (this.keys.right.isDown) {
       this.moveRight();
+      this.lastFlipX = false;
       this.playerSprite.anims.play("right", true);
+    } else if (this.knockBack) {
+      this.handleKnockBack(this.knockBack);
+      this.playerSprite.anims.play(`${playerId}-right`, true);
     } else {
       this.playerSprite.setVelocityX(0);
-      this.playerSprite.anims.play("turn");
+      this.playerSprite.anims.play(`${playerId}-turn`);
     }
 
-    if (this.keys.up.isDown) {
-      this.jump();
+    if (this.keys.up.isDown && !this.jumpCooldown) {
+      if (this.playerSprite.body?.blocked.down) {
+        this.performJump(JUMP_VELOCITY);
+        this.isJumping = true;
+        this.canDoubleJump = true;
+      } else if (this.isJumping && this.canDoubleJump) {
+        this.performJump(DOUBLE_JUMP_VELOCITY);
+        this.canDoubleJump = false;
+      }
     }
 
-    if (this.keys.attack.isDown) {
+    if (this.playerSprite.body?.blocked.down && !this.isJumping) {
+      this.resetJumpFlags();
+    }
+
+    if (this.keys.attack.isDown && this.canAttack) {
       this.performAttack();
     }
 
-    if (this.isAttacking) {
-      this.playerSprite.setTint(0xff0000);
-    } else {
-      this.playerSprite.clearTint();
-    }
+    this.attackHitBox.x = this.playerSprite.x + (this.lastFlipX ? -30 : 30);
+    this.attackHitBox.y = this.playerSprite.y;
+  }
+
+  private performJump(velocityY: number): void {
+    this.playerSprite.setVelocityY(velocityY);
+    this.jumpCooldown = true;
+
+    this.scene.time.delayedCall(DOUBLE_JUMP_COOLDOWN, () => {
+      this.jumpCooldown = false;
+    });
+  }
+
+  private resetJumpFlags(): void {
+    this.isJumping = false;
+    this.canDoubleJump = false;
+    this.jumpCooldown = false;
   }
 
   private performAttack() {
     this.isAttacking = true;
     setTimeout(() => {
       this.isAttacking = false;
-    }, 300);
+    }, 100);
   }
 
   public attack(enemy: Character): void {
-    if (this.isAttacking && enemy.health > 0) {
+    if (this.isAttacking && enemy.health > 0 && this.canAttack) {
+      this.canAttack = false;
       enemy.setHealth(enemy.health - 10);
       enemy.updateHealthBar();
-      console.log("¡Enemigo golpeado!");
+      const enemySprite = enemy.playerSprite;
+      enemySprite.setTint(0xff0000);
+      enemy.knockBack = {
+        flipX: this.lastFlipX,
+        knockBackPower: KNOCK_BACK_POWER,
+      };
+      setTimeout(() => {
+        this.canAttack = true;
+        enemySprite.clearTint();
+        enemy.knockBack = undefined;
+      }, COOLDOWN_ATTACK);
     }
   }
 
@@ -200,11 +268,11 @@ export default class Character {
     this.playerSprite.setVelocityX(this.stats.speed);
   }
 
-  private jump(): void {
-    if (this.stats.doubleJump) {
-      this.playerSprite.setVelocityY(-400);
-    } else if (this.playerSprite.body?.blocked.down) {
-      this.playerSprite.setVelocityY(-500);
+  private handleKnockBack({ flipX, knockBackPower }: KnockBack): void {
+    if (flipX) {
+      this.playerSprite.setVelocityX(-knockBackPower);
+    } else {
+      this.playerSprite.setVelocityX(knockBackPower);
     }
   }
 
@@ -212,14 +280,15 @@ export default class Character {
     this.stats = {
       speed: stats.speed ?? 200,
       attackDamage: stats.attackDamage ?? 10,
-      doubleJump: stats.doubleJump ?? false,
     };
   }
 
   private createAnimations(): void {
+    const playerId = this.id;
+
     this.scene.anims.create({
-      key: "left",
-      frames: this.scene.anims.generateFrameNumbers("dude", {
+      key: `${playerId}-left`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}`, {
         start: 0,
         end: 3,
       }),
@@ -228,14 +297,14 @@ export default class Character {
     });
 
     this.scene.anims.create({
-      key: "turn",
-      frames: [{ key: "dude", frame: 4 }],
+      key: `${playerId}-turn`,
+      frames: [{ key: `player${playerId}`, frame: 4 }],
       frameRate: 20,
     });
 
     this.scene.anims.create({
-      key: "right",
-      frames: this.scene.anims.generateFrameNumbers("dude", {
+      key: `${playerId}-right`,
+      frames: this.scene.anims.generateFrameNumbers(`player${playerId}`, {
         start: 5,
         end: 8,
       }),
