@@ -6,9 +6,8 @@ import { Preloader } from "./scenes/Preloader";
 
 import { Game, Types } from "phaser";
 import { CharacterSelection } from "./scenes/CharacterSelection.ts";
+import {StartScreen} from "./scenes/StartScreen.ts";
 
-//  Find out more information about the Game Config at:
-//  https://newdocs.phaser.io/docs/3.70.0/Phaser.Types.Core.GameConfig
 const config: Types.Core.GameConfig = {
   type: Phaser.AUTO,
   width: 1024,
@@ -22,7 +21,7 @@ const config: Types.Core.GameConfig = {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
-  scene: [Boot, CharacterSelection, Preloader, MainMenu, MainGame, GameOver],
+  scene: [Boot, StartScreen, CharacterSelection, Preloader, MainMenu, MainGame, GameOver],
   physics: {
     default: "arcade",
     arcade: {

@@ -115,7 +115,6 @@ export class CharacterSelection extends Scene {
       .setOrigin(0.5)
       .setInteractive()
       .on("pointerdown", () => {
-        this.music.destroy();
         this.scene.start("MainMenu");
       });
 

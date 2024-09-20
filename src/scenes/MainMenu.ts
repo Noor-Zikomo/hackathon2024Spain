@@ -20,6 +20,7 @@ export type Music =
   | Phaser.Sound.WebAudioSound;
 
 const sideDistance: number = 50;
+type Data = { music: Music };
 
 export class MainMenu extends Scene {
   background: GameObjects.Image;
@@ -28,16 +29,10 @@ export class MainMenu extends Scene {
     super("MainMenu");
   }
 
-  create() {
+  create({ music }: Data) {
     const { width } = this.sys.canvas;
 
     this.background = this.add.image(512, 384, "main");
-    const backgroundMusic: Music = this.sound.add("backgroundMusicMenu", {
-      volume: 0.5,
-      loop: true,
-    });
-    backgroundMusic.play();
-
     this.add.rectangle(512, 400, 1024, 900).setFillStyle(0, 100);
 
     this.add
@@ -147,7 +142,7 @@ export class MainMenu extends Scene {
       .setOrigin(0.5)
       .setInteractive()
       .on("pointerdown", () => {
-        this.scene.start("CharacterSelection", { music: backgroundMusic });
+        this.scene.start("CharacterSelection", { music });
       });
   }
 
