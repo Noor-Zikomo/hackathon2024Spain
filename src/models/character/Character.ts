@@ -227,7 +227,7 @@ export default class Character {
 
   public attack(enemy: Character): void {
     if (this.isAttacking && enemy.health > 0 && this.canAttack) {
-      this.scene.sound.add("attack", { volume: 2 }).play();
+      this.scene.sound.add("attack", { volume: 1 }).play();
       this.canAttack = false;
       enemy.setHealth(enemy.health - 10);
       enemy.updateHealthBar();

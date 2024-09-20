@@ -23,7 +23,7 @@ export class GameOver extends Scene {
 
     this.sound
       .add("backgroundMusicWinner", {
-        volume: 0.5,
+        volume: 0.2,
       })
       .play();
 
