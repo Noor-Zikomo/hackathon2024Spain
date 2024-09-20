@@ -120,7 +120,7 @@ export class Game extends Scene {
     this.physics.add.collider(playerSprite1, playerSprite2);
 
     this.physics.add.overlap(
-      playerSprite1,
+      this.player1.attackHitBox,
       playerSprite2,
       () => this.player1.attack(this.player2),
       undefined,
@@ -128,7 +128,7 @@ export class Game extends Scene {
     );
 
     this.physics.add.overlap(
-      playerSprite2,
+      this.player2.attackHitBox,
       playerSprite1,
       () => this.player2.attack(this.player1),
       undefined,
